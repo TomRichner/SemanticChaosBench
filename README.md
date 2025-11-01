@@ -103,52 +103,55 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 ## Implementation Plan
 
 ### Phase 1: Core Infrastructure (Week 1)
-- [ ] Set up project with `uv` and dependencies
-- [ ] Configure Sentence-BERT with MPS acceleration (local Mac)
-- [ ] Implement prompt perturbation generator
-- [ ] Create unified model API interface
-- [ ] Build basic divergence measurement
-- [ ] Set up API key management (.env file)
+- [ ] a. Set up project with `uv` and dependencies
+- [ ] b. Configure Sentence-BERT with MPS acceleration (local Mac)
+- [ ] c. Implement prompt perturbation generator
+- [ ] d. Create unified model API interface
+- [ ] e. Build basic divergence measurement
+- [ ] f. Set up API key management (.env file)
 
 ### Phase 2: Perturbation Generation (Week 2)
-- [ ] Implement paraphrase generation using GPT-4/Claude API
-- [ ] Build semantic distance filtering (local embeddings)
-- [ ] Create prompt pair validation
-- [ ] Generate test dataset of 100 prompt pairs at various ε levels
+- [ ] a. Implement paraphrase generation using GPT-4/Claude API
+- [ ] b. Build semantic distance filtering (local embeddings)
+- [ ] c. Create prompt pair validation
+- [ ] d. Generate test dataset of 100 prompt pairs at various ε levels
 
 ### Phase 3: Model Integration (Week 3)
-- [ ] Integrate OpenAI API (GPT-5, with and without thinking)
-- [ ] Integrate Anthropic API (Claude models)
-- [ ] Integrate Gemini API
-- [ ] Integrate Replicate API (Llama, Mistral, etc.)
-- [ ] Integrate Together AI (alternative for open models)
-- [ ] Implement rate limiting, retries, and error handling
-- [ ] Add response caching to minimize repeated API calls
+- [ ] a. Integrate OpenAI API (GPT-5, with and without thinking)
+- [ ] b. Integrate Anthropic API (Claude models)
+- [ ] c. Integrate Gemini API
+- [ ] d. Integrate Replicate API (Llama, Mistral, etc.)
+- [ ] e. Integrate Together AI (alternative for open models)
+- [ ] f. Implement rate limiting, retries, and error handling
+- [ ] g. Add response caching to minimize repeated API calls
 
 ### Phase 4: Measurement Suite (Week 4)
-- [ ] Build single-step divergence measurement
-- [ ] Implement multi-step conversation tracking
-- [ ] Create visualization tools
-- [ ] Build statistical analysis pipeline
+- [ ] a. Build single-step divergence measurement
+- [ ] b. Implement multi-step conversation tracking
+- [ ] c. Create visualization tools
+- [ ] d. Build statistical analysis pipeline
 
 ### Phase 5: Benchmarking (Week 5)
-- [ ] Run systematic experiments across models
-- [ ] Generate divergence profiles for each model
-- [ ] Identify chaos/stability regimes
-- [ ] Create comparative analysis
+- [ ] a. Run systematic experiments across models
+- [ ] b. Generate divergence profiles for each model
+- [ ] c. Identify chaos/stability regimes
+- [ ] d. Create comparative analysis
 
 ---
 
 ## Code Structure
 
 ```
-semantic_divergence_bench/
+semantic_chaos_bench/
 ├── src/
+│   ├── __init__.py
 │   ├── perturbation/
+│   │   ├── __init__.py
 │   │   ├── paraphrase_generator.py
 │   │   ├── semantic_filter.py
 │   │   └── prompt_pairs.py
 │   ├── models/
+│   │   ├── __init__.py
 │   │   ├── base_model.py
 │   │   ├── openai_wrapper.py
 │   │   ├── anthropic_wrapper.py
@@ -156,17 +159,25 @@ semantic_divergence_bench/
 │   │   ├── replicate_wrapper.py
 │   │   └── together_wrapper.py
 │   ├── measurement/
+│   │   ├── __init__.py
 │   │   ├── embeddings.py          # Local Sentence-BERT (MPS accelerated)
 │   │   ├── divergence.py
 │   │   └── trajectories.py
 │   ├── analysis/
+│   │   ├── __init__.py
 │   │   ├── metrics.py
 │   │   ├── visualization.py
 │   │   └── statistics.py
 │   └── utils/
+│       ├── __init__.py
 │       ├── config.py
 │       ├── cache.py
 │       └── logging.py
+├── scripts/
+│   ├── pilot_study.py             # Initial validation experiment
+│   ├── generate_prompt_pairs.py   # Batch prompt pair generation
+│   ├── run_benchmark.py           # Full benchmark runner
+│   └── analyze_results.py         # Post-processing and reporting
 ├── experiments/
 │   ├── configs/
 │   └── results/
@@ -177,7 +188,14 @@ semantic_divergence_bench/
 ├── notebooks/
 │   ├── exploration.ipynb
 │   └── analysis.ipynb
+├── docs/
+│   ├── architecture.md            # Detailed system design
+│   ├── api_integration.md         # Guide for adding new model APIs
+│   ├── metrics.md                 # Explanation of divergence metrics
+│   └── usage.md                   # Detailed usage examples
 ├── tests/
+│   └── __init__.py
+├── config.yaml                    # Default settings (epsilon levels, models, etc.)
 ├── pyproject.toml                 # Using uv for dependency management
 ├── .env.example                   # API keys template
 ├── .gitignore
