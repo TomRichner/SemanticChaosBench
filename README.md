@@ -1,20 +1,19 @@
 # Semantic Chaos Bench
 ## Measuring Chaos and Stability in Large Language Models
 
-### Project Overview
-Semantic Chaos Bench measures how small perturbations in input prompts lead to diverging outputs in LLMs, analogous to Lyapunov exponents in dynamical systems. By creating semantically similar prompt pairs and tracking output divergence, we can characterize the stability/chaos regimes of different models.
+Semantic Chaos Bench measures how small perturbations in input prompts lead to diverging outputs in LLMs, analogous to Lyapunov exponents in dynamical systems. By creating semantically similar prompt pairs and tracking output divergence, we characterize the stability/chaos regimes of different models.
 
-**Architecture**: Hybrid local/cloud setup running on Mac:
-- **Local**: Sentence-BERT embeddings (runs on Mac with MPS acceleration)
-- **Cloud**: All LLM inference via APIs (OpenAI, Anthropic, Google, and open models via Replicate/Together AI)
-- **Package Management**: Using `uv` for fast, reliable Python dependency management
-
-### Core Concept
-1. Generate pairs of prompts that differ by small semantic distance ε
-2. Feed both prompts to various LLMs (open and closed source)
-3. Measure semantic distance between outputs using Sentence-BERT
+**How it works:**
+1. Generate prompt pairs differing by small semantic distance ε
+2. Feed both prompts to various LLMs via APIs
+3. Measure semantic distance between outputs using Sentence-BERT (local, MPS-accelerated)
 4. Track divergence rate across multiple generation steps
 5. Compare divergence characteristics across models
+
+**Architecture:**
+- **Local (Mac)**: Sentence-BERT embeddings with MPS acceleration, caching, orchestration
+- **Cloud**: All LLM inference via APIs (OpenAI, Anthropic, Google, Replicate, Together AI)
+- **Package Management**: `uv` for fast dependency management
 
 ---
 
@@ -102,40 +101,42 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 
 ## Implementation Plan
 
-### Phase 1: Core Infrastructure (Week 1)
-- [ ] a. Set up project with `uv` and dependencies
-- [ ] b. Configure Sentence-BERT with MPS acceleration (local Mac)
-- [ ] c. Implement prompt perturbation generator
-- [ ] d. Create unified model API interface
-- [ ] e. Build basic divergence measurement
-- [ ] f. Set up API key management (.env file)
+**Current Phase: Phase 1 - Core Infrastructure**
 
-### Phase 2: Perturbation Generation (Week 2)
-- [ ] a. Implement paraphrase generation using GPT-4/Claude API
-- [ ] b. Build semantic distance filtering (local embeddings)
-- [ ] c. Create prompt pair validation
-- [ ] d. Generate test dataset of 100 prompt pairs at various ε levels
+### Phase 1: Core Infrastructure ✓ In Progress
+- [x] Set up project with `uv` and dependencies
+- [x] Set up API key management (.env file)
+- [x] Google AI Studio integration
+- [ ] Configure Sentence-BERT with MPS acceleration (local Mac)
+- [ ] Implement prompt perturbation generator
+- [ ] Create unified model API interface
+- [ ] Build basic divergence measurement
 
-### Phase 3: Model Integration (Week 3)
-- [ ] a. Integrate OpenAI API (GPT-5, with and without thinking)
-- [ ] b. Integrate Anthropic API (Claude models)
-- [ ] c. Integrate Gemini API
-- [ ] d. Integrate Replicate API (Llama, Mistral, etc.)
-- [ ] e. Integrate Together AI (alternative for open models)
-- [ ] f. Implement rate limiting, retries, and error handling
-- [ ] g. Add response caching to minimize repeated API calls
+### Phase 2: Perturbation Generation
+- [ ] Implement paraphrase generation using GPT-4/Claude API
+- [ ] Build semantic distance filtering (local embeddings)
+- [ ] Create prompt pair validation
+- [ ] Generate test dataset of 100 prompt pairs at various ε levels
 
-### Phase 4: Measurement Suite (Week 4)
-- [ ] a. Build single-step divergence measurement
-- [ ] b. Implement multi-step conversation tracking
-- [ ] c. Create visualization tools
-- [ ] d. Build statistical analysis pipeline
+### Phase 3: Model Integration
+- [ ] Integrate OpenAI API (GPT-4, etc.)
+- [ ] Integrate Anthropic API (Claude models)
+- [ ] Integrate Replicate API (Llama, Mistral, etc.)
+- [ ] Integrate Together AI (alternative for open models)
+- [ ] Implement rate limiting, retries, and error handling
+- [ ] Add response caching to minimize repeated API calls
 
-### Phase 5: Benchmarking (Week 5)
-- [ ] a. Run systematic experiments across models
-- [ ] b. Generate divergence profiles for each model
-- [ ] c. Identify chaos/stability regimes
-- [ ] d. Create comparative analysis
+### Phase 4: Measurement Suite
+- [ ] Build single-step divergence measurement
+- [ ] Implement multi-step conversation tracking
+- [ ] Create visualization tools
+- [ ] Build statistical analysis pipeline
+
+### Phase 5: Benchmarking
+- [ ] Run systematic experiments across models
+- [ ] Generate divergence profiles for each model
+- [ ] Identify chaos/stability regimes
+- [ ] Create comparative analysis
 
 ---
 
@@ -204,18 +205,42 @@ semantic_chaos_bench/
 
 ---
 
-## Key Dependencies
+## Installation & Setup
 
-**Package Manager**: Using `uv` for fast, reliable dependency management
+### Prerequisites
+- macOS with Apple Silicon (for MPS acceleration)
+- Python 3.10 or higher
+- API keys for model providers
+
+### Quick Start
 
 ```bash
-# Install uv first
+# 1. Clone and navigate to repository
+git clone <repo-url>
+cd semantic_chaos_bench
+
+# 2. Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Initialize project
-uv init
+# 3. Create virtual environment and install dependencies
 uv venv
-source .venv/bin/activate  # On Mac
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# 4. Set up API keys
+cp .env.example .env
+# Edit .env and add your API keys:
+# OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...
+# GOOGLE_API_KEY=...  # From ai.google.dev
+# REPLICATE_API_TOKEN=r8_...
+# TOGETHER_API_KEY=...
+
+# 5. Test setup
+python scripts/test_setup.py
+
+# 6. Run pilot experiment (once Phase 1 is complete)
+python scripts/pilot_study.py
 ```
 
 ### Core Dependencies (pyproject.toml)
@@ -262,99 +287,54 @@ dev = [
 ]
 ```
 
-### Installation
+### Available Commands
+
 ```bash
-# Install all dependencies with uv (much faster than pip)
-uv pip install -e .
+# Test setup (verifies MPS, API keys, dependencies)
+python scripts/test_setup.py
 
-# Or install with dev dependencies
-uv pip install -e ".[dev]"
+# Generate prompt pairs
+python scripts/generate_prompt_pairs.py
 
-# Verify MPS (Metal) is available on Mac
-python -c "import torch; print(f'MPS available: {torch.backends.mps.is_available()}')"
+# Run full benchmark
+python scripts/run_benchmark.py
+
+# Analyze results
+python scripts/analyze_results.py
 ```
 
-### Quick Start Setup (Mac)
+### Troubleshooting
+
 ```bash
-# 1. Clone repository
-git clone <repo-url>
-cd semantic_divergence_bench
+# Verify MPS acceleration
+python -c "import torch; print(f'MPS: {torch.backends.mps.is_available()}')"
 
-# 2. Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 3. Create virtual environment and install dependencies
-uv venv
+# Ensure you're in the virtual environment
 source .venv/bin/activate
+
+# Reinstall dependencies if needed
 uv pip install -e ".[dev]"
-
-# 4. Set up API keys
-cp .env.example .env
-# Edit .env and add your API keys:
-# OPENAI_API_KEY=sk-...
-# ANTHROPIC_API_KEY=sk-ant-...
-# GOOGLE_API_KEY=...  # From ai.google.dev
-# REPLICATE_API_TOKEN=r8_...
-# TOGETHER_API_KEY=...
-
-# 5. Test setup
-python -c "from sentence_transformers import SentenceTransformer; import torch; print(f'MPS: {torch.backends.mps.is_available()}')"
-
-# 6. Run pilot experiment
-python scripts/pilot_study.py
 ```
 
 ---
 
 ## Experimental Design
 
-### Prompt Categories to Test
-1. **Factual Questions**: "What is the capital of [country]?"
-2. **Creative Writing**: "Write a story about [topic]"
-3. **Reasoning Tasks**: "Explain why [phenomenon] occurs"
-4. **Code Generation**: "Write a function to [task]"
-5. **Conversational**: "How should I [situation]?"
+**Prompt Categories**: Factual questions, creative writing, reasoning tasks, code generation, conversational
 
-### Perturbation Levels
-- ε = 0.01 (minimal perturbation)
-- ε = 0.05 (small perturbation)
-- ε = 0.10 (moderate perturbation)
-- ε = 0.20 (large perturbation)
+**Perturbation Levels**: ε = 0.01, 0.05, 0.10, 0.20 (minimal to large)
 
-### Models to Compare
-- **Closed Source**: GPT-4, GPT-3.5, Claude 3.5, Claude 3, Gemini Pro
-- **Open Source**: Llama 3 (various sizes), Mistral, Mixtral, Qwen
+**Models**: 
+- Closed: GPT-4, GPT-3.5, Claude 3.5, Claude 3, Gemini Pro
+- Open: Llama 3, Mistral, Mixtral, Qwen
 
-### Measurements per Configuration
-- 100 prompt pairs per category
-- 3 different temperatures (0.0, 0.7, 1.0)
-- 5 generation steps for multi-turn analysis
-- Total: ~15,000 API calls per model
+**Measurements**: 100 prompt pairs per category × 3 temperatures (0.0, 0.7, 1.0) × 5 generation steps = ~15,000 API calls per model
 
----
-
-## Expected Outputs
-
-### 1. Divergence Profiles
-- Heatmap: prompt_type × perturbation_level → divergence_rate
-- Model comparison charts
-- Chaos vs. stability region maps
-
-### 2. Model Characteristics
-- Which models are most sensitive to perturbations?
-- Do larger models show more or less divergence?
-- How does temperature affect stability?
-
-### 3. Prompt-Specific Insights
-- Which prompt types lead to chaotic behavior?
-- Are factual queries more stable than creative ones?
-- How does prompt complexity affect divergence?
-
-### 4. Research Paper Components
-- Quantitative divergence metrics
-- Statistical significance tests
-- Reproducible benchmark suite
-- Public leaderboard potential
+**Expected Outputs**:
+- Divergence profiles and heatmaps (prompt type × perturbation level)
+- Model sensitivity rankings and stability comparisons
+- Chaos vs. stability region identification
+- Statistical analysis and reproducible benchmark suite
 
 ---
 
@@ -381,134 +361,6 @@ bench.generate_report('results/divergence_analysis.html')
 
 ---
 
-## Installation & Setup
-
-### Prerequisites
-- macOS with Apple Silicon (for MPS acceleration)
-- Python 3.10 or higher
-- API keys for model providers
-
-### Quick Start
-
-```bash
-# 1. Clone repository
-git clone <repo-url>
-cd semantic_chaos_bench
-
-# 2. Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 3. Create virtual environment and install dependencies
-uv venv
-source .venv/bin/activate
-uv pip install -e ".[dev]"
-
-# 4. Set up API keys
-cp .env.example .env
-# Edit .env and add your API keys:
-# OPENAI_API_KEY=sk-...
-# ANTHROPIC_API_KEY=sk-ant-...
-# GOOGLE_API_KEY=...  # From ai.google.dev (AI Studio, not Vertex AI)
-# REPLICATE_API_TOKEN=r8_...
-# TOGETHER_API_KEY=...
-
-# 5. Test setup
-python scripts/test_setup.py
-
-# 6. Run pilot experiment
-python scripts/pilot_study.py
-```
-
-### Verify Installation
-
-Run the test script to verify everything is working:
-
-```bash
-source .venv/bin/activate
-python scripts/test_setup.py
-```
-
-The test will check:
-- ✓ MPS (Metal) acceleration availability
-- ✓ API key configuration
-- ✓ Sentence-BERT functionality
-- ✓ Project structure
-
-### Available Commands
-
-```bash
-# Activate virtual environment
-source .venv/bin/activate
-
-# Test setup
-python scripts/test_setup.py
-
-# Run pilot study (once Phase 1 is complete)
-python scripts/pilot_study.py
-
-# Generate prompt pairs
-python scripts/generate_prompt_pairs.py
-
-# Run full benchmark
-python scripts/run_benchmark.py
-
-# Analyze results
-python scripts/analyze_results.py
-```
-
-### Troubleshooting
-
-**MPS not available?**
-```bash
-python -c "import torch; print(f'MPS: {torch.backends.mps.is_available()}')"
-```
-
-**Import errors?**
-```bash
-# Make sure you're in the virtual environment
-source .venv/bin/activate
-```
-
-**Need to reinstall?**
-```bash
-uv pip install -e ".[dev]"
-```
-
-## Project Status
-
-### Current Phase: Phase 1 - Core Infrastructure
-
-**Completed:**
-- [x] 1a. Set up project with uv and dependencies
-- [x] 1f. Set up API key management (.env file)
-- [x] Google AI Studio integration
-
-**In Progress:**
-- [ ] 1b. Configure Sentence-BERT with MPS acceleration (local Mac)
-- [ ] 1c. Implement prompt perturbation generator
-- [ ] 1d. Create unified model API interface
-- [ ] 1e. Build basic divergence measurement
-
-### Key Features
-- **MPS Acceleration**: Sentence-BERT runs on Apple Silicon GPU (10x+ faster than CPU)
-- **API-Only LLMs**: All model inference via cloud APIs (no local hosting needed)
-- **Fast Package Management**: Using `uv` instead of pip
-- **Caching**: API responses cached locally to minimize costs
-- **Modular Design**: Clean separation between perturbation, measurement, and analysis
-
-## Next Steps
-
-1. **Environment Setup**: Install `uv`, create project structure, configure API keys
-2. **Pilot Study**: Start with 10 prompt pairs on 2 models (e.g., GPT-4 + Llama 3) to validate approach
-3. **Optimize Costs**: Implement aggressive caching and batch processing (critical for API costs!)
-4. **Benchmark Closed Models**: Run full suite on OpenAI and Anthropic APIs
-5. **Add Open Models**: Integrate Replicate/Together for Llama, Mistral comparisons
-6. **Analysis & Visualization**: Build comprehensive divergence profiles
-7. **Community Input**: Share methodology and early results for feedback
-8. **Publication**: Prepare findings for academic paper or technical blog post
-
----
-
 ## Research Questions to Explore
 
 1. Do models with more parameters exhibit different divergence patterns?
@@ -520,26 +372,16 @@ uv pip install -e ".[dev]"
 
 ---
 
-## Notes and Considerations
+## Key Considerations
 
-### Architecture Decisions
-- **Local Mac Setup**: Runs Sentence-BERT embeddings with MPS (Metal) acceleration
-- **Cloud APIs**: All LLM inference via APIs - no local model hosting required
-- **Package Management**: Using `uv` for faster dependency resolution and installs
-- **Minimal Compute**: Mac handles orchestration, caching, analysis - not inference
+### Cost & Performance
+- **Budget**: ~$500-1000 for comprehensive benchmarking (primarily API costs)
+- **Caching**: All API responses cached locally to minimize costs and enable reproducibility
+- **MPS Acceleration**: Sentence-BERT runs on Apple Silicon GPU (10x+ faster than CPU)
+- **Storage**: ~5-10GB for cached embeddings and API responses
 
-### Operational
-- **API Costs**: Budget ~$500-1000 for comprehensive benchmarking
-  - Closed models (OpenAI, Anthropic): ~$300-800
-  - Open models (Replicate/Together): ~$100-200
-- **Rate Limits**: Implement proper throttling and retry logic per API
-- **Reproducibility**: Set seeds where possible, log all parameters and model versions
+### Best Practices
+- **Reproducibility**: Set seeds, log all parameters and model versions
+- **Rate Limiting**: Implement throttling and retry logic for each API
+- **Security**: Use `.env` file for API keys (never commit to git)
 - **Ethics**: Ensure prompts are appropriate and non-harmful
-- **Caching**: Store all API responses locally to avoid repeated calls (critical for costs!)
-- **Versioning**: Track model versions as they update over time
-- **API Keys**: Use `.env` file for secure credential management (never commit!)
-
-### Mac-Specific
-- **MPS Acceleration**: PyTorch automatically uses Metal for Sentence-BERT (10x+ faster)
-- **Memory**: Embedding models are small (~100-500MB), easily fits in RAM
-- **Storage**: Cache embeddings and API responses locally (~5-10GB estimated)

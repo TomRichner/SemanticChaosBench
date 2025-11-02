@@ -10,4 +10,4 @@ This project maintains only TWO markdown documentation files:
 - Do NOT create new `.md` files
 - Only edit `README.md` and `CHANGELOG.md`
 - All documentation updates should be integrated into these two files
-
+- Notes made to `CHANGELOG.md` should be concise and not overly redundant with information in README.md

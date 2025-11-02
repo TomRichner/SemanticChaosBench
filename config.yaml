@@ -10,26 +10,19 @@ epsilon_levels:
 # Models to benchmark
 models:
   openai:
-    - gpt-4
-    - gpt-4-turbo
-    - gpt-3.5-turbo
+    - gpt-5
+    - gpt-5-mini
+    - gpt-5-nano
   anthropic:
-    - claude-3-5-sonnet-20241022
-    - claude-3-opus-20240229
-    - claude-3-sonnet-20240229
+    - claude-4-5-sonnet-20241022
+    - claude-haiku-4-5
   google:
-    - gemini-2.5-pro
-    - gemini-2.5-flash
-    - gemini-2.0-flash
     - gemini-pro-latest  # Alias for latest pro
     - gemini-flash-latest  # Alias for latest flash
   replicate:
-    - meta/llama-3-70b
     - meta/llama-3-8b
     - mistralai/mistral-7b-instruct-v0.2
-    - mistralai/mixtral-8x7b-instruct-v0.1
   together:
-    - meta-llama/Llama-3-70b-chat-hf
     - mistralai/Mixtral-8x7B-Instruct-v0.1
 
 # Prompt categories
