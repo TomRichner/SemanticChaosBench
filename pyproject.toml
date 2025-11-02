@@ -1,0 +1,64 @@
+[project]
+name = "semantic-chaos-bench"
+version = "0.1.0"
+description = "Measuring chaos and stability in Large Language Models through semantic divergence analysis"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    # Local embeddings (runs on Mac with MPS)
+    "sentence-transformers>=2.2.0",
+    "torch>=2.0.0",
+    
+    # API clients (all models via cloud)
+    "openai>=1.0.0",
+    "anthropic>=0.18.0",
+    "replicate>=0.20.0",
+    "together>=0.2.0",
+    
+    # Optional: Only if using Gemini
+    # "google-cloud-aiplatform>=1.38.0",
+    
+    # Data & analysis
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    
+    # Visualization
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    
+    # Utilities
+    "tqdm>=4.65.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    
+    # Optional: Experiment tracking
+    "wandb>=0.15.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "jupyter>=1.0.0",
+    "ipykernel>=6.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
