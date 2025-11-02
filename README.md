@@ -53,7 +53,7 @@ class ModelInterface:
     All models accessed via API endpoints:
     - OpenAI API (GPT-4, GPT-3.5-turbo)
     - Anthropic API (Claude 3.5 Sonnet, Claude 3 Opus)
-    - Google Vertex AI (Gemini Pro)
+    - Google AI Studio (Gemini Pro, Gemini 1.5 Pro/Flash)
     - Replicate API (Llama 3, Mistral, Mixtral)
     - Together AI (Open models at scale)
     
@@ -235,9 +235,7 @@ dependencies = [
     "anthropic>=0.18.0",
     "replicate>=0.20.0",
     "together>=0.2.0",
-    
-    # Optional: Only if using Gemini
-    # "google-cloud-aiplatform>=1.38.0",
+    "google-generativeai>=0.3.0",  # Google AI Studio (not Vertex AI)
     
     # Data & analysis
     "numpy>=1.24.0",
@@ -295,6 +293,7 @@ cp .env.example .env
 # Edit .env and add your API keys:
 # OPENAI_API_KEY=sk-...
 # ANTHROPIC_API_KEY=sk-ant-...
+# GOOGLE_API_KEY=...  # From ai.google.dev
 # REPLICATE_API_TOKEN=r8_...
 # TOGETHER_API_KEY=...
 
@@ -381,6 +380,121 @@ bench.generate_report('results/divergence_analysis.html')
 ```
 
 ---
+
+## Installation & Setup
+
+### Prerequisites
+- macOS with Apple Silicon (for MPS acceleration)
+- Python 3.10 or higher
+- API keys for model providers
+
+### Quick Start
+
+```bash
+# 1. Clone repository
+git clone <repo-url>
+cd semantic_chaos_bench
+
+# 2. Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 3. Create virtual environment and install dependencies
+uv venv
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# 4. Set up API keys
+cp .env.example .env
+# Edit .env and add your API keys:
+# OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...
+# GOOGLE_API_KEY=...  # From ai.google.dev (AI Studio, not Vertex AI)
+# REPLICATE_API_TOKEN=r8_...
+# TOGETHER_API_KEY=...
+
+# 5. Test setup
+python scripts/test_setup.py
+
+# 6. Run pilot experiment
+python scripts/pilot_study.py
+```
+
+### Verify Installation
+
+Run the test script to verify everything is working:
+
+```bash
+source .venv/bin/activate
+python scripts/test_setup.py
+```
+
+The test will check:
+- ✓ MPS (Metal) acceleration availability
+- ✓ API key configuration
+- ✓ Sentence-BERT functionality
+- ✓ Project structure
+
+### Available Commands
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+
+# Test setup
+python scripts/test_setup.py
+
+# Run pilot study (once Phase 1 is complete)
+python scripts/pilot_study.py
+
+# Generate prompt pairs
+python scripts/generate_prompt_pairs.py
+
+# Run full benchmark
+python scripts/run_benchmark.py
+
+# Analyze results
+python scripts/analyze_results.py
+```
+
+### Troubleshooting
+
+**MPS not available?**
+```bash
+python -c "import torch; print(f'MPS: {torch.backends.mps.is_available()}')"
+```
+
+**Import errors?**
+```bash
+# Make sure you're in the virtual environment
+source .venv/bin/activate
+```
+
+**Need to reinstall?**
+```bash
+uv pip install -e ".[dev]"
+```
+
+## Project Status
+
+### Current Phase: Phase 1 - Core Infrastructure
+
+**Completed:**
+- [x] 1a. Set up project with uv and dependencies
+- [x] 1f. Set up API key management (.env file)
+- [x] Google AI Studio integration
+
+**In Progress:**
+- [ ] 1b. Configure Sentence-BERT with MPS acceleration (local Mac)
+- [ ] 1c. Implement prompt perturbation generator
+- [ ] 1d. Create unified model API interface
+- [ ] 1e. Build basic divergence measurement
+
+### Key Features
+- **MPS Acceleration**: Sentence-BERT runs on Apple Silicon GPU (10x+ faster than CPU)
+- **API-Only LLMs**: All model inference via cloud APIs (no local hosting needed)
+- **Fast Package Management**: Using `uv` instead of pip
+- **Caching**: API responses cached locally to minimize costs
+- **Modular Design**: Clean separation between perturbation, measurement, and analysis
 
 ## Next Steps
 

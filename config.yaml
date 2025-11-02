@@ -18,7 +18,11 @@ models:
     - claude-3-opus-20240229
     - claude-3-sonnet-20240229
   google:
-    - gemini-pro
+    - gemini-2.5-pro
+    - gemini-2.5-flash
+    - gemini-2.0-flash
+    - gemini-pro-latest  # Alias for latest pro
+    - gemini-flash-latest  # Alias for latest flash
   replicate:
     - meta/llama-3-70b
     - meta/llama-3-8b

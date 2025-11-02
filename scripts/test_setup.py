@@ -62,6 +62,7 @@ def test_api_keys():
     api_keys = {
         "OpenAI": "OPENAI_API_KEY",
         "Anthropic": "ANTHROPIC_API_KEY",
+        "Google AI Studio": "GOOGLE_API_KEY",
         "Replicate": "REPLICATE_API_TOKEN",
         "Together": "TOGETHER_API_KEY",
     }

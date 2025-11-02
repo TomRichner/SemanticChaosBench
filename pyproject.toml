@@ -16,9 +16,7 @@ dependencies = [
     "anthropic>=0.18.0",
     "replicate>=0.20.0",
     "together>=0.2.0",
-    
-    # Optional: Only if using Gemini
-    # "google-cloud-aiplatform>=1.38.0",
+    "google-generativeai>=0.3.0",
     
     # Data & analysis
     "numpy>=1.24.0",

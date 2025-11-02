@@ -39,6 +39,7 @@ Then edit `.env` and add your actual API keys:
 # Required for most experiments
 OPENAI_API_KEY=sk-your-actual-key
 ANTHROPIC_API_KEY=sk-ant-your-actual-key
+GOOGLE_API_KEY=your-actual-key  # From ai.google.dev (AI Studio, not Vertex AI)
 
 # Optional - for open source models
 REPLICATE_API_TOKEN=r8_your-actual-token
@@ -123,6 +124,7 @@ python scripts/analyze_results.py
 - `sentence-transformers==5.1.2` - Sentence-BERT embeddings
 - `openai==2.6.1` - OpenAI API client
 - `anthropic==0.72.0` - Anthropic API client
+- `google-generativeai` - Google AI Studio client (Gemini)
 - `replicate==1.0.7` - Replicate API client
 - `together==1.5.29` - Together AI API client
 - `numpy`, `pandas`, `scipy` - Data processing
