@@ -26,12 +26,11 @@ models:
     - mistralai/Mixtral-8x7B-Instruct-v0.1
 
 # Prompt categories
-prompt_categories:
+categories:
   - factual
   - creative
   - reasoning
   - code
-  - conversational
 
 # Generation parameters
 generation:
@@ -46,11 +45,14 @@ experiment:
   cache_responses: true
 
 # Embedding settings
-embeddings:
-  model: "all-MiniLM-L6-v2"  # Fast, good quality
-  # Alternative: "all-mpnet-base-v2"  # Higher quality, slower
-  device: "mps"  # Metal Performance Shaders for Mac
-  batch_size: 32
+embedding_model: "all-MiniLM-L6-v2"  # Fast, good quality
+# Alternative: "all-mpnet-base-v2"  # Higher quality, slower
+
+# Paraphrase generation settings
+paraphrase_model: "gemini-2.0-flash-exp"  # Model to use for generating paraphrases
+n_paraphrases: 100  # Number of paraphrases to generate per base prompt
+n_pairs_per_prompt: 10  # Number of pairs to generate per base prompt
+tolerance: 0.01  # Tolerance for epsilon matching (epsilon ± tolerance)
 
 # API settings
 api:

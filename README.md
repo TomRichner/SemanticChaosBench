@@ -107,8 +107,8 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [x] Set up project with `uv` and dependencies
 - [x] Set up API key management (.env file)
 - [x] Google AI Studio integration
-- [ ] Configure Sentence-BERT with MPS acceleration (local Mac)
-- [ ] Implement prompt perturbation generator
+- [x] Configure Sentence-BERT with MPS acceleration (local Mac)
+- [x] Implement prompt perturbation generator
 - [ ] Create unified model API interface
 - [ ] Build basic divergence measurement
 

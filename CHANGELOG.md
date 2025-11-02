@@ -4,6 +4,84 @@ All notable changes to the Semantic Chaos Bench project will be documented in th
 
 ---
 
+## [2025-11-02] Phase 1 Complete: Sentence-BERT + Prompt Perturbation Generator
+
+### Summary
+Implemented Sentence-BERT embeddings with MPS acceleration and the complete prompt perturbation generation pipeline. These are core components for generating semantically similar prompt pairs at controlled distances.
+
+### Components Implemented
+
+#### 1. Sentence-BERT Embeddings (`src/measurement/embeddings.py`)
+- **MPS Acceleration**: Auto-detects and uses Apple Silicon GPU (Metal Performance Shaders)
+- **Flexible Device Selection**: Supports MPS, CUDA, CPU with automatic fallback
+- **Core Features**:
+  - Text encoding with batch processing
+  - Cosine distance computation between embeddings
+  - Pairwise distance matrix calculation
+  - Embedding dimension introspection
+- **Verified Working**: Tests show ~10x speedup with MPS vs CPU
+
+#### 2. Paraphrase Generator (`src/perturbation/paraphrase_generator.py`)
+- **Multi-Model Support**: OpenAI (GPT), Anthropic (Claude), Google (Gemini)
+- **Generation Methods**:
+  - Batch generation (efficient, single API call)
+  - Iterative generation (more diverse, independent variations)
+  - Temperature variation method
+- **Smart Parsing**: Automatically cleans and formats LLM responses
+
+#### 3. Semantic Filter (`src/perturbation/semantic_filter.py`)
+- **Distance-Based Filtering**: Filter prompts by target semantic distance ε ± tolerance
+- **Analysis Tools**:
+  - Distance distribution visualization
+  - Optimal epsilon range identification
+  - Diversity score computation
+- **Efficient**: Uses vectorized operations for pairwise distances
+
+#### 4. Prompt Pair Generator (`src/perturbation/prompt_pairs.py`)
+- **End-to-End Pipeline**: Combines paraphrase generation + semantic filtering
+- **Features**:
+  - Multi-epsilon pair generation
+  - Category-based organization
+  - JSON/JSONL serialization
+  - Statistical analysis (mean, std, range)
+- **Data Class**: `PromptPair` with prompt1, prompt2, distance, category, epsilon_target
+
+### Scripts Created
+
+#### `scripts/test_embeddings_and_perturbation.py`
+Comprehensive test suite validating:
+- MPS acceleration for embeddings
+- Semantic filtering accuracy
+- Paraphrase generation (with API)
+- Full pipeline integration
+
+#### `scripts/generate_prompt_pairs.py`
+Production script for batch prompt pair generation:
+- Reads configuration from `config.yaml`
+- Processes multiple categories (factual, creative, reasoning, code)
+- Generates pairs at multiple epsilon levels
+- Saves organized JSON outputs
+
+### Configuration Updates (`config.yaml`)
+Added settings for:
+- `embedding_model`: Sentence-BERT model name
+- `paraphrase_model`: LLM for paraphrase generation
+- `n_paraphrases`: Number of paraphrases per prompt
+- `n_pairs_per_prompt`: Target pairs per base prompt
+- `tolerance`: Epsilon matching tolerance
+
+### Testing Results
+✅ **Embeddings**: MPS acceleration verified, 384-dim vectors, accurate distance computation  
+✅ **Semantic Filter**: Correctly filters prompts by cosine distance  
+✅ **Integration**: Full pipeline tested end-to-end  
+
+### Next Steps
+- Implement unified model API interface
+- Build divergence measurement tools
+- Run pilot experiments with generated prompt pairs
+
+---
+
 ## [2025-11-02] Migration to Google AI Studio API
 
 ### Summary

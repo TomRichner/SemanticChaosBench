@@ -36,6 +36,7 @@ class GoogleModel(BaseModel):
         prompt: str,
         temperature: float = 0.7,
         max_tokens: int = 500,
+        system_prompt: Optional[str] = None,
         **kwargs
     ) -> ModelResponse:
         """
@@ -45,6 +46,7 @@ class GoogleModel(BaseModel):
             prompt: Input prompt
             temperature: Sampling temperature
             max_tokens: Maximum tokens to generate (max_output_tokens in Gemini)
+            system_prompt: Optional system prompt (will be prepended to user prompt)
             **kwargs: Additional Google-specific parameters
             
         Returns:
@@ -52,17 +54,26 @@ class GoogleModel(BaseModel):
         """
         start_time = time.time()
         
+        # Combine system prompt with user prompt if provided
+        # Gemini doesn't have a separate system role in simple API
+        full_prompt = prompt
+        if system_prompt:
+            full_prompt = f"{system_prompt}\n\n{prompt}"
+        
         # Configure generation parameters
+        # Filter out system_prompt from kwargs as it's not a valid GenerationConfig parameter
+        gen_kwargs = {k: v for k, v in kwargs.items() if k != 'system_prompt'}
+        
         generation_config = genai.GenerationConfig(
             temperature=temperature,
             max_output_tokens=max_tokens,
-            **kwargs
+            **gen_kwargs
         )
         
         try:
             # Generate content
             response = self.model.generate_content(
-                prompt,
+                full_prompt,
                 generation_config=generation_config
             )
             
