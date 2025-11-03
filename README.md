@@ -101,29 +101,29 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 
 ## Implementation Plan
 
-**Current Phase: Phase 1 - Core Infrastructure**
+**Current Phase: Phase 4 - Measurement Suite**
 
-### Phase 1: Core Infrastructure ✓ In Progress
+### Phase 1: Core Infrastructure ✓ Complete
 - [x] Set up project with `uv` and dependencies
 - [x] Set up API key management (.env file)
 - [x] Google AI Studio integration
 - [x] Configure Sentence-BERT with MPS acceleration (local Mac)
 - [x] Implement prompt perturbation generator 
-- [ ] Create unified model API interface
+- [x] Create unified model API interface
 - [ ] Build basic divergence measurement
 
-### Phase 2: Perturbation Generation
-- [ ] Implement paraphrase generation using LLM APIs
-- [ ] Build semantic distance filtering (local embeddings)
-- [ ] Create prompt pair validation
+### Phase 2: Perturbation Generation ✓ In Progress
+- [x] Implement paraphrase generation using LLM APIs
+- [x] Build semantic distance filtering (local embeddings)
+- [x] Create prompt pair validation
 - [ ] Generate test dataset of 100 prompt pairs at various ε levels
 
-### Phase 3: Model Integration
-- [ ] Integrate OpenAI API (gpt-4o-mini)
-- [ ] Integrate Anthropic API (claude-haiku-4-5)
-- [ ] Integrate Google AI Studio (gemini-2.5-flash)
-- [ ] Integrate Replicate API (meta/meta-llama-3-8b-instruct)
-- [ ] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
+### Phase 3: Model Integration ✓ Complete
+- [x] Integrate OpenAI API (gpt-4o-mini)
+- [x] Integrate Anthropic API (claude-haiku-4-5)
+- [x] Integrate Google AI Studio (gemini-2.5-flash)
+- [x] Integrate Replicate API (meta/meta-llama-3-8b-instruct)
+- [x] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
 - [ ] Implement rate limiting, retries, and error handling
 - [ ] Add response caching to minimize repeated API calls
 
