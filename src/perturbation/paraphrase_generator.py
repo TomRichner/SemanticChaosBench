@@ -111,9 +111,8 @@ Paraphrases:"""
         # Parse response into list of paraphrases
         paraphrases = [
             line.strip()
-            for line in response.strip().split('\n')
-            if line.strip() and not line.strip().startswith(('#', '-', '*', str(i)))
-            for i in range(n_paraphrases + 1)
+            for line in response.text.strip().split('\n')
+            if line.strip() and not line.strip().startswith(('#', '-', '*'))
         ]
         
         # Clean up: remove numbering if present
@@ -162,7 +161,7 @@ Paraphrase:"""
                 max_tokens=500
             )
             
-            paraphrase = response.strip()
+            paraphrase = response.text.strip()
             if paraphrase and len(paraphrase) > 10:
                 paraphrases.append(paraphrase)
             
@@ -214,7 +213,7 @@ Variation:"""
                 max_tokens=500
             )
             
-            variation = response.strip()
+            variation = response.text.strip()
             if variation and len(variation) > 10:
                 variations.append(variation)
         

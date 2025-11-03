@@ -16,7 +16,7 @@ models:
   google:
     - gemini-2.5-flash
   replicate:
-    - meta/llama-3-8b
+    - meta/meta-llama-3-8b-instruct
   together:
     - meta-llama/Meta-Llama-3-8B-Instruct-Lite
 

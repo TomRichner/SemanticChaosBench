@@ -17,7 +17,7 @@ class ReplicateModel(BaseModel):
         Initialize Replicate model wrapper
         
         Args:
-            model_name: Replicate model identifier (e.g., 'meta/llama-3-8b')
+            model_name: Replicate model identifier (e.g., 'meta/meta-llama-3-8b-instruct')
             api_key: Replicate API token
         """
         super().__init__(model_name, api_key)

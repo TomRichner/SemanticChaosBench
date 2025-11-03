@@ -46,7 +46,7 @@ def get_model(model_name: str, api_key: Optional[str] = None) -> BaseModel:
     elif 'gemini' in model_lower or 'palm' in model_lower:
         return GoogleModel(model_name=model_name, api_key=api_key)
     
-    # Replicate models (typically have '/' in name like 'meta/llama-3-8b')
+    # Replicate models (typically have '/' in name like 'meta/meta-llama-3-8b-instruct')
     elif '/' in model_name and any(prefix in model_lower for prefix in ['meta/', 'mistralai/', 'nousresearch/']):
         return ReplicateModel(model_name=model_name, api_key=api_key)
     

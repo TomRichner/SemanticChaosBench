@@ -53,7 +53,7 @@ class ModelInterface:
     - OpenAI API (gpt-4o-mini)
     - Anthropic API (claude-haiku-4-5)
     - Google AI Studio (gemini-2.5-flash)
-    - Replicate API (meta/llama-3-8b)
+    - Replicate API (meta/meta-llama-3-8b-instruct)
     - Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
     
     No local LLM inference - keeps Mac resource usage low
@@ -122,7 +122,7 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [ ] Integrate OpenAI API (gpt-4o-mini)
 - [ ] Integrate Anthropic API (claude-haiku-4-5)
 - [ ] Integrate Google AI Studio (gemini-2.5-flash)
-- [ ] Integrate Replicate API (meta/llama-3-8b)
+- [ ] Integrate Replicate API (meta/meta-llama-3-8b-instruct)
 - [ ] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
 - [ ] Implement rate limiting, retries, and error handling
 - [ ] Add response caching to minimize repeated API calls
@@ -329,7 +329,7 @@ uv pip install -e ".[dev]"
 - gpt-4o-mini (OpenAI)
 - claude-haiku-4-5 (Anthropic)
 - gemini-2.5-flash (Google)
-- meta/llama-3-8b (Replicate)
+- meta/meta-llama-3-8b-instruct (Replicate)
 - meta-llama/Meta-Llama-3-8B-Instruct-Lite (Together AI)
 
 **Measurements**: 100 prompt pairs per category × 3 temperatures (0.0, 0.7, 1.0) × 5 generation steps = ~15,000 API calls per model
@@ -349,7 +349,7 @@ from semantic_divergence_bench import DivergenceBench
 
 # Initialize benchmark
 bench = DivergenceBench(
-    models=['gpt-4o-mini', 'claude-haiku-4-5', 'gemini-2.5-flash', 'meta/llama-3-8b', 'meta-llama/Meta-Llama-3-8B-Instruct-Lite'],
+    models=['gpt-4o-mini', 'claude-haiku-4-5', 'gemini-2.5-flash', 'meta/meta-llama-3-8b-instruct', 'meta-llama/Meta-Llama-3-8B-Instruct-Lite'],
     epsilon_levels=[0.01, 0.05, 0.10],
     prompt_categories=['factual', 'creative', 'reasoning']
 )

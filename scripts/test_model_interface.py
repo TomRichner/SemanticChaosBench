@@ -31,7 +31,7 @@ def test_model_routing():
         ("gpt-4o-mini", "OpenAIModel"),
         ("claude-haiku-4-5", "AnthropicModel"),
         ("gemini-2.5-flash", "GoogleModel"),
-        ("meta/llama-3-8b", "ReplicateModel"),
+        ("meta/meta-llama-3-8b-instruct", "ReplicateModel"),  # Updated: correct Replicate format
         ("meta-llama/Meta-Llama-3-8B-Instruct-Lite", "TogetherModel"),
     ]
     
@@ -193,6 +193,8 @@ def test_multiple_models():
         ("gemini-2.5-flash", "GOOGLE_API_KEY"),
         ("gpt-4o-mini", "OPENAI_API_KEY"),
         ("claude-haiku-4-5", "ANTHROPIC_API_KEY"),
+        ("meta/meta-llama-3-8b-instruct", "REPLICATE_API_TOKEN"),  # Updated: correct Replicate format
+        ("meta-llama/Meta-Llama-3-8B-Instruct-Lite", "TOGETHER_API_KEY"),
     ]
     
     for model_name, env_key in models_to_test:
@@ -209,7 +211,7 @@ def test_multiple_models():
                 prompt=prompt,
                 model=model_name,
                 temperature=0.0,
-                max_tokens=500
+                max_tokens=1000
             )
             
             signal.alarm(0)  # Cancel alarm
