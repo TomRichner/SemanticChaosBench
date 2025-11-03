@@ -74,7 +74,7 @@ def test_embeddings():
     return model
 
 
-def test_paraphrase_generator(model_name="gemini-pro"):
+def test_paraphrase_generator(model_name="gemini-2.5-flash"):
     """Test paraphrase generation"""
     from perturbation.paraphrase_generator import ParaphraseGenerator
     
@@ -180,7 +180,7 @@ def test_prompt_pair_generator(embedding_model, use_api=False):
     
     try:
         # Initialize components
-        paraphrase_gen = ParaphraseGenerator(model_name="gemini-pro")
+        paraphrase_gen = ParaphraseGenerator(model_name="gemini-2.5-flash")
         semantic_filter = SemanticFilter(embedding_model)
         pair_gen = PromptPairGenerator(paraphrase_gen, semantic_filter)
         
@@ -245,7 +245,7 @@ def main():
     
     # Test 3: Paraphrase generator (requires API key)
     logger.info("\nTrying to test paraphrase generator...")
-    paraphrase_gen, paraphrases = test_paraphrase_generator(model_name="gemini-pro")
+    paraphrase_gen, paraphrases = test_paraphrase_generator(model_name="gemini-2.5-flash")
     
     # Test 4: Full pipeline (requires API key)
     if paraphrase_gen is not None:

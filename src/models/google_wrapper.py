@@ -12,12 +12,12 @@ from .base_model import BaseModel, ModelResponse
 class GoogleModel(BaseModel):
     """Wrapper for Google models (Gemini via AI Studio)"""
     
-    def __init__(self, model_name: str = "gemini-2.5-pro", api_key: Optional[str] = None):
+    def __init__(self, model_name: str = "gemini-2.5-flash", api_key: Optional[str] = None):
         """
         Initialize Google model wrapper (AI Studio API)
         
         Args:
-            model_name: Google model name (e.g., 'gemini-2.5-pro', 'gemini-2.5-flash')
+            model_name: Google model name (e.g., 'gemini-2.5-flash')
             api_key: Google API key from AI Studio
         """
         super().__init__(model_name, api_key)
@@ -71,16 +71,71 @@ class GoogleModel(BaseModel):
         )
         
         try:
+            # Configure safety settings to be less restrictive
+            safety_settings = [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_ONLY_HIGH",
+                },
+                {
+                    "category": "HARM_CATEGORY_HATE_SPEECH",
+                    "threshold": "BLOCK_ONLY_HIGH",
+                },
+                {
+                    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                    "threshold": "BLOCK_ONLY_HIGH",
+                },
+                {
+                    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    "threshold": "BLOCK_ONLY_HIGH",
+                },
+            ]
+            
             # Generate content
             response = self.model.generate_content(
                 full_prompt,
-                generation_config=generation_config
+                generation_config=generation_config,
+                safety_settings=safety_settings
             )
             
             latency = time.time() - start_time
             
-            # Extract text from response
-            generated_text = response.text
+            # Check if response was blocked
+            if not response.candidates:
+                raise RuntimeError("Response blocked by Google AI. No candidates returned.")
+            
+            candidate = response.candidates[0]
+            
+            # Try to extract text - if it fails, check why
+            try:
+                generated_text = response.text
+            except ValueError as e:
+                # response.text raises ValueError when there are no valid parts
+                # Check the finish reason to give a better error message
+                finish_reason = candidate.finish_reason
+                reason_name = finish_reason.name if hasattr(finish_reason, 'name') else str(finish_reason)
+                
+                # Include safety ratings if available
+                safety_ratings = ""
+                if hasattr(candidate, 'safety_ratings'):
+                    ratings = candidate.safety_ratings  
+                    if ratings:
+                        safety_ratings = f"\nSafety ratings: {[f'{r.category.name}={r.probability.name}' for r in ratings]}"
+                
+                # Different messages for different finish reasons
+                if reason_name == 'MAX_TOKENS':
+                    raise RuntimeError(
+                        f"Google AI returned no content (MAX_TOKENS reached before any output was generated). "
+                        f"Try increasing max_tokens (current: {max_tokens}) or shortening the prompt."
+                    )
+                elif reason_name in ['SAFETY', 'RECITATION']:
+                    raise RuntimeError(
+                        f"Response blocked by Google AI due to {reason_name} filters.{safety_ratings}"
+                    )
+                else:
+                    raise RuntimeError(
+                        f"Response blocked by Google AI. Finish reason: {reason_name}{safety_ratings}\nOriginal error: {str(e)}"
+                    )
             
             # Extract token count if available
             token_count = None
@@ -97,7 +152,10 @@ class GoogleModel(BaseModel):
                 }
             )
             
+        except RuntimeError:
+            # Re-raise RuntimeError as-is (already has good error message)
+            raise
         except Exception as e:
-            # Handle API errors
+            # Handle other API errors
             raise RuntimeError(f"Google AI generation failed: {str(e)}")
 

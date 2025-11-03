@@ -50,11 +50,11 @@ def generate_temperature_variants(base_prompt, model, epsilon):
 class ModelInterface:
     """
     All models accessed via API endpoints:
-    - OpenAI API (GPT-4, GPT-3.5-turbo)
-    - Anthropic API (Claude 3.5 Sonnet, Claude 3 Opus)
-    - Google AI Studio (Gemini Pro, Gemini 1.5 Pro/Flash)
-    - Replicate API (Llama 3, Mistral, Mixtral)
-    - Together AI (Open models at scale)
+    - OpenAI API (gpt-4o-mini)
+    - Anthropic API (claude-haiku-4-5)
+    - Google AI Studio (gemini-2.5-flash)
+    - Replicate API (meta/llama-3-8b)
+    - Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
     
     No local LLM inference - keeps Mac resource usage low
     """
@@ -108,21 +108,22 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [x] Set up API key management (.env file)
 - [x] Google AI Studio integration
 - [x] Configure Sentence-BERT with MPS acceleration (local Mac)
-- [x] Implement prompt perturbation generator
+- [x] Implement prompt perturbation generator 
 - [ ] Create unified model API interface
 - [ ] Build basic divergence measurement
 
 ### Phase 2: Perturbation Generation
-- [ ] Implement paraphrase generation using GPT-4/Claude API
+- [ ] Implement paraphrase generation using LLM APIs
 - [ ] Build semantic distance filtering (local embeddings)
 - [ ] Create prompt pair validation
 - [ ] Generate test dataset of 100 prompt pairs at various ε levels
 
 ### Phase 3: Model Integration
-- [ ] Integrate OpenAI API (GPT-4, etc.)
-- [ ] Integrate Anthropic API (Claude models)
-- [ ] Integrate Replicate API (Llama, Mistral, etc.)
-- [ ] Integrate Together AI (alternative for open models)
+- [ ] Integrate OpenAI API (gpt-4o-mini)
+- [ ] Integrate Anthropic API (claude-haiku-4-5)
+- [ ] Integrate Google AI Studio (gemini-2.5-flash)
+- [ ] Integrate Replicate API (meta/llama-3-8b)
+- [ ] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
 - [ ] Implement rate limiting, retries, and error handling
 - [ ] Add response caching to minimize repeated API calls
 
@@ -325,8 +326,11 @@ uv pip install -e ".[dev]"
 **Perturbation Levels**: ε = 0.01, 0.05, 0.10, 0.20 (minimal to large)
 
 **Models**: 
-- Closed: GPT-4, GPT-3.5, Claude 3.5, Claude 3, Gemini Pro
-- Open: Llama 3, Mistral, Mixtral, Qwen
+- gpt-4o-mini (OpenAI)
+- claude-haiku-4-5 (Anthropic)
+- gemini-2.5-flash (Google)
+- meta/llama-3-8b (Replicate)
+- meta-llama/Meta-Llama-3-8B-Instruct-Lite (Together AI)
 
 **Measurements**: 100 prompt pairs per category × 3 temperatures (0.0, 0.7, 1.0) × 5 generation steps = ~15,000 API calls per model
 
@@ -345,7 +349,7 @@ from semantic_divergence_bench import DivergenceBench
 
 # Initialize benchmark
 bench = DivergenceBench(
-    models=['gpt-4', 'claude-3.5-sonnet', 'llama-3-70b'],
+    models=['gpt-4o-mini', 'claude-haiku-4-5', 'gemini-2.5-flash', 'meta/llama-3-8b', 'meta-llama/Meta-Llama-3-8B-Instruct-Lite'],
     epsilon_levels=[0.01, 0.05, 0.10],
     prompt_categories=['factual', 'creative', 'reasoning']
 )

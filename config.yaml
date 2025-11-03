@@ -10,20 +10,15 @@ epsilon_levels:
 # Models to benchmark
 models:
   openai:
-    - gpt-5
-    - gpt-5-mini
-    - gpt-5-nano
+    - gpt-4o-mini
   anthropic:
-    - claude-4-5-sonnet-20241022
     - claude-haiku-4-5
   google:
-    - gemini-pro-latest  # Alias for latest pro
-    - gemini-flash-latest  # Alias for latest flash
+    - gemini-2.5-flash
   replicate:
     - meta/llama-3-8b
-    - mistralai/mistral-7b-instruct-v0.2
   together:
-    - mistralai/Mixtral-8x7B-Instruct-v0.1
+    - meta-llama/Meta-Llama-3-8B-Instruct-Lite
 
 # Prompt categories
 categories:
@@ -49,7 +44,7 @@ embedding_model: "all-MiniLM-L6-v2"  # Fast, good quality
 # Alternative: "all-mpnet-base-v2"  # Higher quality, slower
 
 # Paraphrase generation settings
-paraphrase_model: "gemini-2.0-flash-exp"  # Model to use for generating paraphrases
+paraphrase_model: "gemini-2.5-flash"  # Model to use for generating paraphrases
 n_paraphrases: 100  # Number of paraphrases to generate per base prompt
 n_pairs_per_prompt: 10  # Number of pairs to generate per base prompt
 tolerance: 0.01  # Tolerance for epsilon matching (epsilon ± tolerance)

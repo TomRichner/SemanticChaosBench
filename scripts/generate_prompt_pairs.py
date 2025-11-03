@@ -133,7 +133,7 @@ def main():
     
     # Extract parameters from config
     epsilon_levels = config.get('epsilon_levels', [0.01, 0.05, 0.10, 0.20])
-    paraphrase_model = config.get('paraphrase_model', 'gemini-pro')
+    paraphrase_model = config.get('paraphrase_model', 'gemini-2.5-flash')
     embedding_model_name = config.get('embedding_model', 'all-MiniLM-L6-v2')
     n_pairs_per_prompt = config.get('n_pairs_per_prompt', 10)
     n_paraphrases = config.get('n_paraphrases', 100)

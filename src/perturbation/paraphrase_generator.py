@@ -26,13 +26,13 @@ logger = logging.getLogger(__name__)
 class ParaphraseGenerator:
     """Generate paraphrases of prompts using LLMs"""
     
-    def __init__(self, model_name: str = "gpt-4", api_key: Optional[str] = None):
+    def __init__(self, model_name: str = "gemini-2.5-flash", api_key: Optional[str] = None):
         """
         Initialize paraphrase generator
         
         Args:
             model_name: Name of model to use for paraphrasing
-                       Supported: gpt-4, gpt-3.5-turbo, claude-3.5-sonnet, gemini-pro
+                       Supported: gpt-4o-mini, claude-haiku-4-5, gemini-2.5-flash
             api_key: Optional API key (if not provided, will use environment variable)
         """
         self.model_name = model_name

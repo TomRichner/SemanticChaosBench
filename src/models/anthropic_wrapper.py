@@ -2,29 +2,40 @@
 Anthropic API wrapper
 """
 
+import os
+import time
 from typing import Optional
+from anthropic import Anthropic
 from .base_model import BaseModel, ModelResponse
 
 
 class AnthropicModel(BaseModel):
     """Wrapper for Anthropic models (Claude)"""
     
-    def __init__(self, model_name: str = "claude-3-5-sonnet-20241022", api_key: Optional[str] = None):
+    def __init__(self, model_name: str = "claude-haiku-4-5", api_key: Optional[str] = None):
         """
         Initialize Anthropic model wrapper
         
         Args:
-            model_name: Anthropic model name
+            model_name: Anthropic model name (e.g., 'claude-haiku-4-5')
             api_key: Anthropic API key
         """
         super().__init__(model_name, api_key)
-        # TODO: Initialize Anthropic client
+        
+        # Get API key from parameter or environment
+        api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("Anthropic API key required. Set ANTHROPIC_API_KEY in .env")
+        
+        # Initialize Anthropic client
+        self.client = Anthropic(api_key=api_key)
     
     def generate(
         self,
         prompt: str,
         temperature: float = 0.7,
         max_tokens: int = 500,
+        system_prompt: Optional[str] = None,
         **kwargs
     ) -> ModelResponse:
         """
@@ -34,11 +45,55 @@ class AnthropicModel(BaseModel):
             prompt: Input prompt
             temperature: Sampling temperature
             max_tokens: Maximum tokens to generate
+            system_prompt: Optional system prompt
             **kwargs: Additional Anthropic-specific parameters
             
         Returns:
             ModelResponse with generated text and metadata
         """
-        # TODO: Implement Anthropic API call
-        raise NotImplementedError("Anthropic generation not yet implemented")
+        start_time = time.time()
+        
+        # Filter out system_prompt from kwargs
+        gen_kwargs = {k: v for k, v in kwargs.items() if k != 'system_prompt'}
+        
+        try:
+            # Make API call
+            # Anthropic uses system parameter separately
+            api_kwargs = {
+                "model": self.model_name,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "messages": [{"role": "user", "content": prompt}],
+                **gen_kwargs
+            }
+            
+            if system_prompt:
+                api_kwargs["system"] = system_prompt
+            
+            response = self.client.messages.create(**api_kwargs)
+            
+            latency = time.time() - start_time
+            
+            # Extract response data
+            generated_text = response.content[0].text
+            
+            # Calculate token count
+            token_count = None
+            if hasattr(response, 'usage'):
+                token_count = response.usage.input_tokens + response.usage.output_tokens
+            
+            return ModelResponse(
+                text=generated_text,
+                latency=latency,
+                token_count=token_count,
+                model_name=self.model_name,
+                metadata={
+                    "stop_reason": response.stop_reason,
+                    "input_tokens": response.usage.input_tokens if hasattr(response, 'usage') else None,
+                    "output_tokens": response.usage.output_tokens if hasattr(response, 'usage') else None,
+                }
+            )
+            
+        except Exception as e:
+            raise RuntimeError(f"Anthropic generation failed: {str(e)}")
 
