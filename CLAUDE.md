@@ -7,7 +7,5 @@ This project maintains only TWO markdown documentation files:
 2. `CHANGELOG.md` - Change history and setup references
 
 **IMPORTANT:** 
-- Do NOT create new `.md` files
-- Only edit `README.md` and `CHANGELOG.md`
-- All documentation updates should be integrated into these two files
-- Notes made to `CHANGELOG.md` should be concise and not overly redundant with information in README.md
+- You are running in Cursor.  If you are in Cursor's agent mode, do NOT create new `.md` files.  Only edit `README.md` and `CHANGELOG.md`. All documentation updates should be integrated into these two files. Notes made to `CHANGELOG.md` should be concise and not overly redundant with information in README.md
+- If you are running in Cursor's Plan mode, it is okay to make .plan.md files.

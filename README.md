@@ -176,6 +176,16 @@ semantic_chaos_bench/
 │       ├── cache.py
 │       └── logging.py
 ├── scripts/
+│   ├── run_scripts.py             # Runner for test and demo scripts
+│   ├── tests/                     # Test scripts
+│   │   ├── test_setup.py          # Verify environment setup
+│   │   ├── test_divergence.py     # Test divergence measurement
+│   │   ├── test_embeddings_and_perturbation.py
+│   │   ├── test_google_api.py     # Test Google AI Studio API
+│   │   └── test_model_interface.py
+│   ├── demos/                     # Demo scripts
+│   │   ├── demo_phase1.py         # Phase 1 features demo
+│   │   └── demo_divergence_with_models.py
 │   ├── pilot_study.py             # Initial validation experiment
 │   ├── generate_prompt_pairs.py   # Batch prompt pair generation
 │   ├── run_benchmark.py           # Full benchmark runner
@@ -238,7 +248,9 @@ cp .env.example .env
 # TOGETHER_API_KEY=...
 
 # 5. Test setup
-python scripts/test_setup.py
+python scripts/run_scripts.py --tests
+# Or run a specific test:
+# python scripts/tests/test_setup.py
 
 # 6. Run pilot experiment (once Phase 1 is complete)
 python scripts/pilot_study.py
@@ -290,18 +302,62 @@ dev = [
 
 ### Available Commands
 
+#### Running Tests and Demos
+
+The `run_scripts.py` runner provides a unified interface for executing test and demo scripts:
+
+```bash
+# Run all test and demo scripts
+python scripts/run_scripts.py --all
+
+# Run all test scripts only
+python scripts/run_scripts.py --tests
+
+# Run all demo scripts only
+python scripts/run_scripts.py --demos
+
+# Run specific scripts (by name, with or without .py extension)
+python scripts/run_scripts.py --scripts test_setup demo_phase1
+python scripts/run_scripts.py --scripts test_divergence test_embeddings_and_perturbation
+```
+
+#### Individual Test Scripts
+
 ```bash
 # Test setup (verifies MPS, API keys, dependencies)
-python scripts/test_setup.py
+python scripts/tests/test_setup.py
 
 # Test divergence measurement (local only, no API calls)
-python scripts/test_divergence.py
+python scripts/tests/test_divergence.py
+
+# Test embeddings and perturbation
+python scripts/tests/test_embeddings_and_perturbation.py
+
+# Test Google AI Studio API
+python scripts/tests/test_google_api.py
+
+# Test model interface
+python scripts/tests/test_model_interface.py
+```
+
+#### Demo Scripts
+
+```bash
+# Demo Phase 1 features
+python scripts/demos/demo_phase1.py
 
 # Demo divergence measurement with real LLM models
-python scripts/demo_divergence_with_models.py
+python scripts/demos/demo_divergence_with_models.py
+```
 
+#### Other Scripts
+
+```bash
 # Generate prompt pairs
 python scripts/generate_prompt_pairs.py
+
+# Run pilot study
+python scripts/pilot_study.py
 
 # Run full benchmark
 python scripts/run_benchmark.py

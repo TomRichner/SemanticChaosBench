@@ -4,6 +4,22 @@ All notable changes to the Semantic Chaos Bench project will be documented in th
 
 ---
 
+## [2025-11-04] Script Organization and Unified Runner
+
+### Changes
+- **Reorganized scripts directory** with subdirectories for better maintainability:
+  - `scripts/tests/` - All test scripts (test_setup.py, test_divergence.py, etc.)
+  - `scripts/demos/` - All demo scripts (demo_phase1.py, demo_divergence_with_models.py)
+  - Other scripts (generate_prompt_pairs.py, pilot_study.py, etc.) remain in scripts root
+- **Created unified runner script** (`scripts/run_scripts.py`):
+  - Run all tests: `python scripts/run_scripts.py --tests`
+  - Run all demos: `python scripts/run_scripts.py --demos`
+  - Run everything: `python scripts/run_scripts.py --all`
+  - Run specific scripts: `python scripts/run_scripts.py --scripts test_setup demo_phase1`
+- **Updated README.md** with new directory structure and runner usage examples
+
+---
+
 ## [2025-11-04] Phase 1 Complete: Basic Divergence Measurement
 
 ### Summary
