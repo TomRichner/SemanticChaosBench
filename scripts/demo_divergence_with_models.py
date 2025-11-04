@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from measurement.embeddings import EmbeddingModel
+from measurement.embeddings import get_embedding_model
 from measurement.divergence import DivergenceMeasurer
 from models.openai_wrapper import OpenAIModel
 from models.anthropic_wrapper import AnthropicModel
@@ -33,7 +33,7 @@ def demo_single_model_divergence():
     
     # Initialize embedding model (local, MPS-accelerated)
     print("\n📊 Initializing local embedding model...")
-    embedding_model = EmbeddingModel(model_name="all-MiniLM-L6-v2", device="auto")
+    embedding_model = get_embedding_model(model_name="all-MiniLM-L6-v2", device="auto")
     print(f"   {embedding_model}")
     
     # Initialize divergence measurer
@@ -151,7 +151,7 @@ def demo_multi_model_comparison():
     print("=" * 70)
     
     # Initialize embedding model
-    embedding_model = EmbeddingModel(model_name="all-MiniLM-L6-v2", device="auto")
+    embedding_model = get_embedding_model(model_name="all-MiniLM-L6-v2", device="auto")
     measurer = DivergenceMeasurer(embedding_model)
     
     # Collect available models

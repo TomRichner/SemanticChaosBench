@@ -17,7 +17,7 @@ import yaml
 from dotenv import load_dotenv
 from typing import List, Dict
 
-from src.measurement.embeddings import EmbeddingModel
+from src.measurement.embeddings import get_embedding_model
 from src.perturbation.paraphrase_generator import ParaphraseGenerator
 from src.perturbation.semantic_filter import SemanticFilter
 from src.perturbation.prompt_pairs import PromptPairGenerator
@@ -151,7 +151,7 @@ def main():
     logger.info("\nInitializing components...")
     
     # 1. Embedding model (local, MPS-accelerated)
-    embedding_model = EmbeddingModel(model_name=embedding_model_name, device="auto")
+    embedding_model = get_embedding_model(model_name=embedding_model_name, device="auto")
     
     # 2. Paraphrase generator (uses API)
     paraphrase_gen = ParaphraseGenerator(model_name=paraphrase_model)

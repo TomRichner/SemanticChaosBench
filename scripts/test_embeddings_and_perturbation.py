@@ -31,14 +31,14 @@ load_dotenv()
 
 def test_embeddings():
     """Test Sentence-BERT embeddings with MPS acceleration"""
-    from measurement.embeddings import EmbeddingModel
+    from measurement.embeddings import get_embedding_model
     
     logger.info("\n" + "="*60)
     logger.info("Testing Sentence-BERT Embeddings")
     logger.info("="*60)
     
     # Initialize model (will auto-detect MPS)
-    model = EmbeddingModel(model_name="all-MiniLM-L6-v2", device="auto")
+    model = get_embedding_model(model_name="all-MiniLM-L6-v2", device="auto")
     logger.info(f"Model: {model}")
     
     # Test single encoding

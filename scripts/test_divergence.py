@@ -9,7 +9,7 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from measurement.embeddings import EmbeddingModel
+from measurement.embeddings import get_embedding_model
 from measurement.divergence import DivergenceMeasurer
 
 
@@ -21,7 +21,7 @@ def test_basic_divergence():
     
     # Initialize embedding model with MPS acceleration
     print("\n1. Initializing embedding model...")
-    embedding_model = EmbeddingModel(model_name="all-MiniLM-L6-v2", device="auto")
+    embedding_model = get_embedding_model(model_name="all-MiniLM-L6-v2", device="auto")
     print(f"   {embedding_model}")
     
     # Initialize divergence measurer

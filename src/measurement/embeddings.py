@@ -10,6 +10,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Module-level cache for embedding models
+_EMBEDDING_MODEL_CACHE = {}
+
 
 class EmbeddingModel:
     """Wrapper for Sentence-BERT embeddings with MPS support"""
@@ -149,4 +152,30 @@ class EmbeddingModel:
     
     def __repr__(self) -> str:
         return f"EmbeddingModel(model='{self.model_name}', device='{self.device}', dim={self.get_embedding_dim()})"
+
+
+def get_embedding_model(
+    model_name: str = "all-MiniLM-L6-v2",
+    device: str = "auto"
+) -> EmbeddingModel:
+    """
+    Get or create a cached embedding model instance.
+    
+    Returns the same instance for identical (model_name, device) combinations.
+    This prevents redundant loading of model weights into memory.
+    
+    Args:
+        model_name: Sentence-Transformers model name
+        device: Device to use ('auto', 'mps', 'cuda', or 'cpu')
+    
+    Returns:
+        Cached or newly created EmbeddingModel instance
+    """
+    cache_key = (model_name, device)
+    if cache_key not in _EMBEDDING_MODEL_CACHE:
+        logger.info(f"Creating new cached embedding model: {model_name} on {device}")
+        _EMBEDDING_MODEL_CACHE[cache_key] = EmbeddingModel(model_name, device)
+    else:
+        logger.debug(f"Reusing cached embedding model: {model_name} on {device}")
+    return _EMBEDDING_MODEL_CACHE[cache_key]
 

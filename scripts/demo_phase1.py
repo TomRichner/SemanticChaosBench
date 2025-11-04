@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.measurement.embeddings import EmbeddingModel
+from src.measurement.embeddings import get_embedding_model
 
 def main():
     print("="*70)
@@ -18,7 +18,7 @@ def main():
     
     # 1. Initialize Sentence-BERT with MPS acceleration
     print("\n1. Initializing Sentence-BERT with MPS acceleration...")
-    model = EmbeddingModel(model_name="all-MiniLM-L6-v2", device="auto")
+    model = get_embedding_model(model_name="all-MiniLM-L6-v2", device="auto")
     print(f"   ✓ {model}")
     
     # 2. Demonstrate semantic distance measurement
