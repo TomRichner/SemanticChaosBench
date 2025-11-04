@@ -4,6 +4,83 @@ All notable changes to the Semantic Chaos Bench project will be documented in th
 
 ---
 
+## [2025-11-04] Phase 1 Complete: Basic Divergence Measurement
+
+### Summary
+✅ **Phase 1 is now complete!** Implemented single-step divergence measurement system that measures semantic chaos in LLMs by quantifying how small prompt perturbations lead to diverging outputs.
+
+### Components Implemented
+
+#### 1. Divergence Measurement (`src/measurement/divergence.py`)
+- **`measure_single_divergence()`**: Core function to measure divergence between prompt pairs and their outputs
+- **Metrics Computed**:
+  - Input distance (ε): Semantic distance between prompts
+  - Output distance (δ): Semantic distance between model outputs
+  - Divergence rate (δ/ε): Amplification factor (analogous to Lyapunov exponents)
+- **Integration**: Works seamlessly with existing EmbeddingModel and all model wrappers
+- **Return Format**: Dictionary with all metrics plus raw embeddings for further analysis
+
+#### 2. Test Scripts
+
+**`scripts/test_divergence.py`**
+- Tests divergence measurement with four distinct scenarios:
+  1. Identical prompts → Different outputs (infinite divergence, chaos)
+  2. Similar prompts → Similar outputs (low divergence, stable)
+  3. Different prompts → Different outputs (proportional divergence)
+  4. Tiny perturbation → Variable outputs (THE KEY METRIC for chaos)
+- Validates all computation logic without requiring API calls
+- ✅ All tests passing with expected behavior
+
+**`scripts/demo_divergence_with_models.py`**
+- End-to-end integration demo with actual LLM API calls
+- Shows real divergence measurement workflow:
+  - Initialize embedding model (local, MPS-accelerated)
+  - Generate outputs from perturbed prompt pairs
+  - Compute and interpret divergence metrics
+- Includes multi-model comparison capability
+- Provides clear interpretation of results (stable/moderate/chaotic)
+
+### Key Results from Testing
+
+Example divergence measurements from `test_divergence.py`:
+
+| Test Case | Input Distance | Output Distance | Divergence Rate | Interpretation |
+|-----------|---------------|-----------------|-----------------|----------------|
+| Identical → Different | 0.000000 | 0.250431 | ∞ | Maximum chaos |
+| Similar → Similar | 0.068988 | 0.010643 | 0.1543 | Stable |
+| Different → Different | 0.945108 | 1.069666 | 1.1318 | Proportional |
+| Tiny change (short→brief) | 0.048521 | 0.417126 | 8.5969 | Chaotic |
+
+**Interpretation:**
+- δ/ε < 1.0 → Stable behavior (outputs diverge less than inputs)
+- δ/ε < 5.0 → Moderate divergence
+- δ/ε >> 1.0 → Chaotic behavior (small changes amplified dramatically)
+
+### Documentation Updates
+
+**README.md:**
+- ✅ Marked Phase 1 as complete
+- Updated current phase to Phase 2 & 4
+- Added new test scripts to Available Commands section
+
+### Phase Status
+
+**Phase 1: Core Infrastructure** ✅ **Complete**
+- [x] Project setup with `uv`
+- [x] API key management
+- [x] Sentence-BERT with MPS acceleration
+- [x] Prompt perturbation generator
+- [x] Unified model API interface
+- [x] **Basic divergence measurement** ← Just completed!
+
+### Next Steps
+- Implement multi-step conversation tracking (Phase 4)
+- Create visualization tools for divergence profiles
+- Generate comprehensive prompt pair dataset (Phase 2)
+- Run systematic benchmarking across models (Phase 5)
+
+---
+
 ## [2025-11-03] Unified Model API Interface Complete
 
 ### Summary

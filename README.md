@@ -101,16 +101,16 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 
 ## Implementation Plan
 
-**Current Phase: Phase 4 - Measurement Suite**
+**Current Phase: Phase 2 - Perturbation Generation & Phase 4 - Measurement Suite**
 
-### Phase 1: Core Infrastructure ✓ Complete
+### Phase 1: Core Infrastructure ✅ Complete
 - [x] Set up project with `uv` and dependencies
 - [x] Set up API key management (.env file)
 - [x] Google AI Studio integration
 - [x] Configure Sentence-BERT with MPS acceleration (local Mac)
 - [x] Implement prompt perturbation generator 
 - [x] Create unified model API interface
-- [ ] Build basic divergence measurement
+- [x] Build basic divergence measurement
 
 ### Phase 2: Perturbation Generation ✓ In Progress
 - [x] Implement paraphrase generation using LLM APIs
@@ -127,8 +127,8 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [ ] Implement rate limiting, retries, and error handling
 - [ ] Add response caching to minimize repeated API calls
 
-### Phase 4: Measurement Suite
-- [ ] Build single-step divergence measurement
+### Phase 4: Measurement Suite ✓ In Progress
+- [x] Build single-step divergence measurement
 - [ ] Implement multi-step conversation tracking
 - [ ] Create visualization tools
 - [ ] Build statistical analysis pipeline
@@ -293,6 +293,12 @@ dev = [
 ```bash
 # Test setup (verifies MPS, API keys, dependencies)
 python scripts/test_setup.py
+
+# Test divergence measurement (local only, no API calls)
+python scripts/test_divergence.py
+
+# Demo divergence measurement with real LLM models
+python scripts/demo_divergence_with_models.py
 
 # Generate prompt pairs
 python scripts/generate_prompt_pairs.py

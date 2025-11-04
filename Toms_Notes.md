@@ -17,3 +17,39 @@ Ask a problem which takes a lot of thinking, but only verify the semantics of th
 
 Or do a task which involves more generative exploration.  Would a math AI with neutral stability do better than a highly convergent one?  And how does temperature play in?
 
+---
+
+## Mid-Generation Perturbation via Conversation History (Technical Solution)
+
+**Key Insight**: Closed-source LLM APIs (OpenAI, Anthropic, Google, etc.) allow you to provide conversation history including "assistant" role messages. The model treats these assistant messages as if it had generated them itself.
+
+**How It Works**:
+```
+messages = [
+    {"role": "user", "content": "Explain quantum computing"},
+    {"role": "assistant", "content": "Quantum computing uses..."},  # We inject this!
+]
+# Model continues from this point as if it wrote that text
+```
+
+**Experimental Design**:
+1. Generate full response to complex question (control condition)
+2. Keep first half of model output, split at sentence boundary
+3. Modify one sentence in the first half using sentence-BERT paraphrasing
+4. Inject modified first half as "assistant" message in conversation history
+5. Request continuation from that point
+6. Compare original second half vs. new continuation (measure divergence)
+
+**Implementation Requirements**:
+- Add `generate_with_context(messages)` method to model wrappers
+- Messages array contains full conversation history with roles
+- Works identically across OpenAI, Anthropic, Google APIs
+
+**Why This Matters**: 
+This enables testing whether semantic perturbations in the model's OWN OUTPUT (not just input prompts) cause divergence in subsequent generation. Tests stability of the generation process itself as an iterative system.
+
+**Experimental Variations**:
+- Modify different positions (early/middle/late in first half)
+- Vary perturbation magnitude (small paraphrase vs. semantic shift)
+- Test with factual vs. creative vs. reasoning tasks
+- Compare models: Do some recover better from perturbed context?

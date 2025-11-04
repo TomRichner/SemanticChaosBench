@@ -35,10 +35,35 @@ class DivergenceMeasurer:
             output2: Output from prompt2
             
         Returns:
-            Dictionary with divergence metrics
+            Dictionary with divergence metrics:
+                - input_distance: Semantic distance between prompts
+                - output_distance: Semantic distance between outputs
+                - divergence_rate: output_distance / input_distance
+                - prompt_embeddings: (embedding1, embedding2)
+                - output_embeddings: (embedding1, embedding2)
         """
-        # TODO: Implement single-step divergence measurement
-        raise NotImplementedError("Single divergence measurement not yet implemented")
+        # Embed the prompts
+        prompt_embeddings = self.embedding_model.encode([prompt1, prompt2])
+        prompt_emb1, prompt_emb2 = prompt_embeddings[0], prompt_embeddings[1]
+        
+        # Embed the outputs
+        output_embeddings = self.embedding_model.encode([output1, output2])
+        output_emb1, output_emb2 = output_embeddings[0], output_embeddings[1]
+        
+        # Compute distances
+        input_distance = self.embedding_model.cosine_distance(prompt_emb1, prompt_emb2)
+        output_distance = self.embedding_model.cosine_distance(output_emb1, output_emb2)
+        
+        # Compute divergence rate
+        divergence_rate = self.compute_divergence_rate(input_distance, output_distance)
+        
+        return {
+            'input_distance': float(input_distance),
+            'output_distance': float(output_distance),
+            'divergence_rate': float(divergence_rate),
+            'prompt_embeddings': (prompt_emb1, prompt_emb2),
+            'output_embeddings': (output_emb1, output_emb2),
+        }
     
     def compute_divergence_rate(
         self,
