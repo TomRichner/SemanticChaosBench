@@ -1,22 +1,15 @@
 [
   {
     "prompt1": "What is the capital of France?",
-    "prompt2": "What is France's capital city?",
-    "distance": 0.049052894115448,
+    "prompt2": "Could you tell me the capital of France?",
+    "distance": 0.0643814206123352,
     "category": "factual",
     "epsilon_target": 0.05
   },
   {
     "prompt1": "What is the capital of France?",
-    "prompt2": "What's the capital city for France?",
-    "distance": 0.048965394496917725,
-    "category": "factual",
-    "epsilon_target": 0.05
-  },
-  {
-    "prompt1": "What is the capital of France?",
-    "prompt2": "Which city is France's capital?",
-    "distance": 0.06549465656280518,
+    "prompt2": "What is the name of France's capital city?",
+    "distance": 0.06571757793426514,
     "category": "factual",
     "epsilon_target": 0.05
   }

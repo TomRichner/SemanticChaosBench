@@ -118,14 +118,14 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [x] Create prompt pair validation
 - [ ] Generate test dataset of 100 prompt pairs at various ε levels
 
-### Phase 3: Model Integration ✓ Complete
+### Phase 3: Model Integration ✅ Complete
 - [x] Integrate OpenAI API (gpt-4o-mini)
 - [x] Integrate Anthropic API (claude-haiku-4-5)
 - [x] Integrate Google AI Studio (gemini-2.5-flash)
 - [x] Integrate Replicate API (meta/meta-llama-3-8b-instruct)
 - [x] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
-- [ ] Implement rate limiting, retries, and error handling
-- [ ] Add response caching to minimize repeated API calls
+- [x] Implement rate limiting, retries, and error handling
+- [x] Add response caching to minimize repeated API calls
 
 ### Phase 4: Measurement Suite ✓ In Progress
 - [x] Build single-step divergence measurement
@@ -300,6 +300,28 @@ dev = [
 ]
 ```
 
+### Key Features
+
+#### Response Caching
+All model wrappers support automatic response caching to minimize API costs:
+- Responses are cached based on model, prompt, temperature, and all parameters
+- Cache hits return instantly without making API calls
+- Can be disabled per model with `enable_cache=False`
+- Cache statistics available via `model.cache.get_stats()`
+
+#### Rate Limiting
+Provider-specific rate limiting prevents quota exhaustion:
+- Configurable delays between requests per provider
+- Thread-safe implementation for concurrent usage
+- Configured in `config.yaml` under `api.rate_limits`
+
+#### Automatic Retries
+Robust error handling with exponential backoff:
+- Automatically retries transient errors (500, 503, 429)
+- Configurable retry attempts and delays
+- Provider-specific retryable exception handling
+- Clear error messages for non-retryable failures
+
 ### Available Commands
 
 #### Running Tests and Demos
@@ -338,6 +360,9 @@ python scripts/tests/test_google_api.py
 
 # Test model interface
 python scripts/tests/test_model_interface.py
+
+# Test caching functionality
+python scripts/tests/test_caching.py
 ```
 
 #### Demo Scripts

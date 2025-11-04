@@ -51,10 +51,23 @@ tolerance: 0.01  # Tolerance for epsilon matching (epsilon ± tolerance)
 
 # API settings
 api:
+  # Retry configuration
   max_retries: 3
-  retry_delay: 1.0  # seconds
+  retry_delay: 1.0  # seconds, base delay for exponential backoff
   timeout: 30  # seconds
-  rate_limit_delay: 0.5  # seconds between requests
+  
+  # Rate limiting (provider-specific)
+  rate_limits:
+    openai: 0.5      # seconds between requests
+    anthropic: 0.5   # seconds between requests
+    google: 1.0      # seconds between requests (more conservative)
+    replicate: 1.0   # seconds between requests (can be slow)
+    together: 0.5    # seconds between requests
+  
+  # Caching configuration
+  cache:
+    enabled: true
+    directory: "data/cache"
 
 # Output settings
 output:
