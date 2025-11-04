@@ -11,7 +11,7 @@ Semantic Chaos Bench measures how small perturbations in input prompts lead to d
 5. Compare divergence characteristics across models
 
 **Architecture:**
-- **Local (Mac)**: Sentence-BERT embeddings with MPS acceleration, caching, orchestration
+- **Local (Mac)**: Sentence-BERT embeddings with MPS acceleration, orchestration of experiments and API calles, analysis, stats, visualizations
 - **Cloud**: All LLM inference via APIs (OpenAI, Anthropic, Google, Replicate, Together AI)
 - **Package Management**: `uv` for fast dependency management
 
@@ -125,7 +125,6 @@ def measure_trajectory_divergence(prompt1, prompt2, model, n_steps):
 - [x] Integrate Replicate API (meta/meta-llama-3-8b-instruct)
 - [x] Integrate Together AI (meta-llama/Meta-Llama-3-8B-Instruct-Lite)
 - [x] Implement rate limiting, retries, and error handling
-- [x] Add response caching to minimize repeated API calls
 
 ### Phase 4: Measurement Suite ✓ In Progress
 - [x] Build single-step divergence measurement
@@ -313,6 +312,9 @@ Robust error handling with exponential backoff:
 - Provider-specific retryable exception handling
 - Clear error messages for non-retryable failures
 
+#### Response Caching
+**Note:** This project does not use response caching. Given the goals of measuring divergence and stochastic behavior in LLMs, caching responses would compromise the experimental validity and introduce potential errors in divergence measurements if used incorrectly.  So it is safer not to include caching in the architecture.  It is better to explicitly save prompts and responses into  data/prompt_pairs or data/outputs for experiment requiring reanalysis or itteration.  A volitile cache is more likely to create problems.
+
 ### Available Commands
 
 #### Running Tests and Demos
@@ -351,9 +353,6 @@ python scripts/tests/test_google_api.py
 
 # Test model interface
 python scripts/tests/test_model_interface.py
-
-# Test caching functionality
-python scripts/tests/test_caching.py
 ```
 
 #### Demo Scripts
