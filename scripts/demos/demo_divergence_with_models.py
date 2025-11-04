@@ -11,13 +11,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from measurement.embeddings import get_embedding_model
-from measurement.divergence import DivergenceMeasurer
-from models.openai_wrapper import OpenAIModel
-from models.anthropic_wrapper import AnthropicModel
-from models.google_wrapper import GoogleModel
+from src.measurement.embeddings import get_embedding_model
+from src.measurement.divergence import DivergenceMeasurer
+from src.models.openai_wrapper import OpenAIModel
+from src.models.anthropic_wrapper import AnthropicModel
+from src.models.google_wrapper import GoogleModel
 
 # Load environment variables
 load_dotenv()

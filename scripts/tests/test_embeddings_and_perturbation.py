@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import logging
 from dotenv import load_dotenv
@@ -31,7 +31,7 @@ load_dotenv()
 
 def test_embeddings():
     """Test Sentence-BERT embeddings with MPS acceleration"""
-    from measurement.embeddings import get_embedding_model
+    from src.measurement.embeddings import get_embedding_model
     
     logger.info("\n" + "="*60)
     logger.info("Testing Sentence-BERT Embeddings")
@@ -76,7 +76,7 @@ def test_embeddings():
 
 def test_paraphrase_generator(model_name="gemini-2.5-flash"):
     """Test paraphrase generation"""
-    from perturbation.paraphrase_generator import ParaphraseGenerator
+    from src.perturbation.paraphrase_generator import ParaphraseGenerator
     
     logger.info("\n" + "="*60)
     logger.info(f"Testing Paraphrase Generator ({model_name})")
@@ -113,7 +113,7 @@ def test_paraphrase_generator(model_name="gemini-2.5-flash"):
 
 def test_semantic_filter(embedding_model):
     """Test semantic filtering"""
-    from perturbation.semantic_filter import SemanticFilter
+    from src.perturbation.semantic_filter import SemanticFilter
     
     logger.info("\n" + "="*60)
     logger.info("Testing Semantic Filter")
@@ -165,9 +165,9 @@ def test_semantic_filter(embedding_model):
 
 def test_prompt_pair_generator(embedding_model, use_api=False):
     """Test complete prompt pair generation pipeline"""
-    from perturbation.prompt_pairs import PromptPairGenerator
-    from perturbation.paraphrase_generator import ParaphraseGenerator
-    from perturbation.semantic_filter import SemanticFilter
+    from src.perturbation.prompt_pairs import PromptPairGenerator
+    from src.perturbation.paraphrase_generator import ParaphraseGenerator
+    from src.perturbation.semantic_filter import SemanticFilter
     
     logger.info("\n" + "="*60)
     logger.info("Testing Prompt Pair Generator")

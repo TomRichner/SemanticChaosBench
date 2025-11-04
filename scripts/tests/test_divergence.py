@@ -7,10 +7,10 @@ import os
 from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from measurement.embeddings import get_embedding_model
-from measurement.divergence import DivergenceMeasurer
+from src.measurement.embeddings import get_embedding_model
+from src.measurement.divergence import DivergenceMeasurer
 
 
 def test_basic_divergence():
