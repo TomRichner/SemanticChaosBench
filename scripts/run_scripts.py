@@ -26,6 +26,7 @@ TEST_SCRIPTS = [
     "test_embeddings_and_perturbation.py",
     "test_google_api.py",
     "test_model_interface.py",
+    "test_caching.py",
 ]
 
 DEMO_SCRIPTS = [
