@@ -4,7 +4,58 @@ All notable changes to the Semantic Chaos Bench project will be documented in th
 
 ---
 
-## [2025-11-04] Caching Disabled by Default
+git ## [2025-11-04] Response Caching Removed
+
+### Summary
+Completely removed the response caching infrastructure from the project to ensure experimental integrity and simplify maintenance.
+
+### Rationale
+- **Experimental Integrity**: The project measures response divergence from small input changes and temperature variations. Any caching could bias results.
+- **Rarely Used**: Caching was already disabled by default and seldom needed.
+- **Maintenance Burden**: Keeping rarely-used code increases complexity and maintenance overhead.
+- **Explicit Data Management**: Experiments should save results explicitly in `data/outputs/`, not rely on temporary caches.
+
+### Changes Made
+
+**Deleted Files:**
+- `src/utils/cache.py` - Complete cache module (176 lines)
+- `scripts/tests/test_caching.py` - Cache test suite (296 lines)
+
+**Code Changes:**
+- `src/utils/__init__.py`: Removed `Cache` import and export
+- `src/models/base_model.py`: Removed cache initialization, `_get_cached_response()`, and `_cache_response()` methods
+- All model wrappers: Removed `enable_cache` parameter and cache calls
+  - `src/models/anthropic_wrapper.py`
+  - `src/models/google_wrapper.py`
+  - `src/models/openai_wrapper.py`
+  - `src/models/replicate_wrapper.py`
+  - `src/models/together_wrapper.py`
+
+**Configuration:**
+- `config.yaml`: Removed `experiment.cache_responses`, `api.cache` section, and `output.cache_dir`
+- `scripts/tests/test_setup.py`: Removed `data/cache` from required directories
+
+**Documentation:**
+- `README.md`: Removed all caching documentation and references
+- Updated project structure to remove cache-related entries
+
+**Cleanup:**
+- Deleted `data/cache/` directory
+
+### Important Distinctions
+The following caches were **kept** as they serve different purposes:
+- `_EMBEDDING_MODEL_CACHE` in `src/measurement/embeddings.py` - Caches model instances for performance, not API responses
+- `_model_cache` in `src/models/__init__.py` - Caches wrapper instances to avoid re-initialization
+
+### Impact
+- All API calls now produce fresh responses
+- No risk of cached responses biasing experimental results
+- Simplified codebase with less code to maintain
+- Experimental data must be saved explicitly (which is the intended workflow)
+
+---
+
+## [2025-11-04] Caching Disabled by Default (Historical)
 
 ### Summary
 Changed default caching behavior from enabled to disabled to preserve the stochastic nature of model responses, which is essential for measuring divergence and chaos.

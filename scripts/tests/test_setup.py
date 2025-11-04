@@ -93,7 +93,6 @@ def test_project_structure():
         "experiments/results",
         "data/prompt_pairs",
         "data/outputs",
-        "data/cache",
         "notebooks",
         "tests",
     ]

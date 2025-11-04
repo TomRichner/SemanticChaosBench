@@ -173,7 +173,6 @@ semantic_chaos_bench/
 │   └── utils/
 │       ├── __init__.py
 │       ├── config.py
-│       ├── cache.py
 │       └── logging.py
 ├── scripts/
 │   ├── run_scripts.py             # Runner for test and demo scripts
@@ -195,8 +194,7 @@ semantic_chaos_bench/
 │   └── results/
 ├── data/
 │   ├── prompt_pairs/
-│   ├── outputs/
-│   └── cache/                     # Local cache for API responses
+│   └── outputs/
 ├── notebooks/
 │   ├── exploration.ipynb
 │   └── analysis.ipynb
@@ -301,16 +299,6 @@ dev = [
 ```
 
 ### Key Features
-
-#### Response Caching
-**Caching is disabled by default** to preserve the stochastic nature of model responses, which is central to measuring divergence and chaos in this project. However, the caching infrastructure remains available for specific use cases:
-- Can be enabled per model with `enable_cache=True`
-- Responses are cached based on model, prompt, temperature, and all parameters
-- Cache hits return instantly without making API calls
-- Cache statistics available via `model.cache.get_stats()`
-- Useful for development/debugging when you need faster iteration
-
-**Note**: For experimental data, use explicit result saving in `data/outputs/` rather than relying on API response caching.
 
 #### Rate Limiting
 Provider-specific rate limiting prevents quota exhaustion:
@@ -470,7 +458,6 @@ bench.generate_report('results/divergence_analysis.html')
 
 ### Cost & Performance
 - **Budget**: ~$500-1000 for comprehensive benchmarking (primarily API costs)
-- **Caching**: Disabled by default to preserve response stochasticity; available for development with `enable_cache=True`
 - **MPS Acceleration**: Sentence-BERT runs on Apple Silicon GPU (10x+ faster than CPU)
 - **Storage**: ~5-10GB for embeddings and experimental results
 

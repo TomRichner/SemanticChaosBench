@@ -37,7 +37,6 @@ generation:
 experiment:
   pairs_per_category: 100
   random_seed: 42
-  cache_responses: false
 
 # Embedding settings
 embedding_model: "all-MiniLM-L6-v2"  # Fast, good quality
@@ -63,16 +62,10 @@ api:
     google: 1.0      # seconds between requests (more conservative)
     replicate: 1.0   # seconds between requests (can be slow)
     together: 0.5    # seconds between requests
-  
-  # Caching configuration
-  cache:
-    enabled: false
-    directory: "data/cache"
 
 # Output settings
 output:
   results_dir: "experiments/results"
-  cache_dir: "data/cache"
   plot_format: "png"
   plot_dpi: 300
 

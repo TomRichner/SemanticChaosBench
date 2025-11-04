@@ -8,7 +8,6 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 
 # Import utilities
-from ..utils.cache import Cache
 from ..utils.api_helpers import get_rate_limiter, RateLimiter
 from ..utils.config import load_config
 
@@ -23,12 +22,12 @@ class ModelResponse:
     metadata: Optional[Dict[str, Any]] = None
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert response to dictionary for caching"""
+        """Convert response to dictionary"""
         return asdict(self)
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelResponse':
-        """Create response from dictionary (from cache)"""
+        """Create response from dictionary"""
         return cls(**data)
 
 
@@ -37,7 +36,6 @@ class BaseModel(ABC):
     Abstract base class for all LLM wrappers
     
     Provides:
-    - Response caching to minimize API costs
     - Rate limiting to prevent quota exhaustion
     - Configuration management
     """
@@ -46,7 +44,6 @@ class BaseModel(ABC):
         self,
         model_name: str,
         api_key: Optional[str] = None,
-        enable_cache: bool = False,
         config_path: str = "config.yaml"
     ):
         """
@@ -55,7 +52,6 @@ class BaseModel(ABC):
         Args:
             model_name: Name/identifier of the model
             api_key: API key for authentication
-            enable_cache: Whether to enable response caching
             config_path: Path to configuration file
         """
         self.model_name = model_name
@@ -71,15 +67,8 @@ class BaseModel(ABC):
                 'max_retries': 3,
                 'retry_delay': 1.0,
                 'timeout': 30,
-                'rate_limits': {},
-                'cache': {'enabled': True, 'directory': 'data/cache'}
+                'rate_limits': {}
             }
-        
-        # Initialize cache
-        cache_config = self.config.get('cache', {})
-        cache_enabled = enable_cache and cache_config.get('enabled', True)
-        cache_dir = cache_config.get('directory', 'data/cache')
-        self.cache = Cache(cache_dir=cache_dir, enabled=cache_enabled)
         
         # Get rate limiter for this provider
         provider = self._get_provider_name()
@@ -110,66 +99,6 @@ class BaseModel(ABC):
         else:
             return 'default'
     
-    def _get_cached_response(
-        self,
-        prompt: str,
-        temperature: float,
-        max_tokens: int,
-        **kwargs
-    ) -> Optional[ModelResponse]:
-        """
-        Try to get cached response
-        
-        Args:
-            prompt: Input prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens
-            **kwargs: Additional parameters
-            
-        Returns:
-            Cached ModelResponse or None
-        """
-        cache_key = self.cache.generate_model_cache_key(
-            model_name=self.model_name,
-            prompt=prompt,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            **kwargs
-        )
-        
-        cached_data = self.cache.get(cache_key)
-        if cached_data:
-            return ModelResponse.from_dict(cached_data)
-        return None
-    
-    def _cache_response(
-        self,
-        response: ModelResponse,
-        prompt: str,
-        temperature: float,
-        max_tokens: int,
-        **kwargs
-    ) -> None:
-        """
-        Cache a response
-        
-        Args:
-            response: Response to cache
-            prompt: Input prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens
-            **kwargs: Additional parameters
-        """
-        cache_key = self.cache.generate_model_cache_key(
-            model_name=self.model_name,
-            prompt=prompt,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            **kwargs
-        )
-        
-        self.cache.set(cache_key, response.to_dict())
-    
     @abstractmethod
     def generate(
         self,
@@ -192,7 +121,7 @@ class BaseModel(ABC):
             
         Note:
             Subclasses should implement the actual API call logic.
-            Caching and rate limiting are handled by this base class.
+            Rate limiting is handled by this base class.
         """
         pass
 

@@ -11,13 +11,12 @@ from ..utils.api_helpers import retry_with_backoff, RetryConfig
 
 
 class TogetherModel(BaseModel):
-    """Wrapper for Together AI models with caching, retries, and rate limiting"""
+    """Wrapper for Together AI models with retries and rate limiting"""
     
     def __init__(
         self,
         model_name: str,
         api_key: Optional[str] = None,
-        enable_cache: bool = False,
         config_path: str = "config.yaml"
     ):
         """
@@ -26,10 +25,9 @@ class TogetherModel(BaseModel):
         Args:
             model_name: Together AI model identifier (e.g., 'meta-llama/Meta-Llama-3-8B-Instruct-Lite')
             api_key: Together AI API key
-            enable_cache: Whether to enable response caching
             config_path: Path to configuration file
         """
-        super().__init__(model_name, api_key, enable_cache, config_path)
+        super().__init__(model_name, api_key, config_path)
         
         # Get API key from parameter or environment
         api_key = api_key or os.getenv("TOGETHER_API_KEY")
@@ -52,7 +50,7 @@ class TogetherModel(BaseModel):
         **kwargs
     ) -> ModelResponse:
         """
-        Generate text using Together AI API with caching and rate limiting
+        Generate text using Together AI API with rate limiting
         
         Args:
             prompt: Input prompt
@@ -64,42 +62,17 @@ class TogetherModel(BaseModel):
         Returns:
             ModelResponse with generated text and metadata
         """
-        # Check cache first
-        cache_kwargs = {k: v for k, v in kwargs.items() if k != 'system_prompt'}
-        if system_prompt:
-            cache_kwargs['system_prompt'] = system_prompt
-        
-        cached_response = self._get_cached_response(
-            prompt=prompt,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            **cache_kwargs
-        )
-        if cached_response:
-            return cached_response
-        
         # Apply rate limiting
         self.rate_limiter.wait_if_needed()
         
         # Make API call with retry logic
-        response = self._generate_with_retry(
+        return self._generate_with_retry(
             prompt=prompt,
             temperature=temperature,
             max_tokens=max_tokens,
             system_prompt=system_prompt,
             **kwargs
         )
-        
-        # Cache the response
-        self._cache_response(
-            response=response,
-            prompt=prompt,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            **cache_kwargs
-        )
-        
-        return response
     
     def _generate_with_retry(
         self,

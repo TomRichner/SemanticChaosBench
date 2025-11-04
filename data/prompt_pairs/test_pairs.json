@@ -2,7 +2,7 @@
   {
     "prompt1": "What is the capital of France?",
     "prompt2": "Which city is the capital of France?",
-    "distance": 0.05836421251296997,
+    "distance": 0.058364272117614746,
     "category": "factual",
     "epsilon_target": 0.05
   }
