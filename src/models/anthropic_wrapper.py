@@ -17,7 +17,7 @@ class AnthropicModel(BaseModel):
         self,
         model_name: str = "claude-haiku-4-5",
         api_key: Optional[str] = None,
-        enable_cache: bool = True,
+        enable_cache: bool = False,
         config_path: str = "config.yaml"
     ):
         """

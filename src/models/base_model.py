@@ -46,7 +46,7 @@ class BaseModel(ABC):
         self,
         model_name: str,
         api_key: Optional[str] = None,
-        enable_cache: bool = True,
+        enable_cache: bool = False,
         config_path: str = "config.yaml"
     ):
         """

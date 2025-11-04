@@ -4,6 +4,51 @@ All notable changes to the Semantic Chaos Bench project will be documented in th
 
 ---
 
+## [2025-11-04] Caching Disabled by Default
+
+### Summary
+Changed default caching behavior from enabled to disabled to preserve the stochastic nature of model responses, which is essential for measuring divergence and chaos.
+
+### Rationale
+- **Research Goals**: This project explicitly studies response variability, stochasticity, and divergence
+- **Caching Conflicts**: Caching masks the phenomena we're measuring (different outputs from identical inputs)
+- **Experimental Integrity**: Each API call should produce fresh, independent responses
+- **Simpler Mental Model**: No need to remember to disable caching for each experiment
+
+### Changes Made
+
+**Code Changes:**
+- `src/models/base_model.py`: Changed `enable_cache` default from `True` to `False`
+- All model wrappers: Changed `enable_cache` default from `True` to `False`
+  - `src/models/anthropic_wrapper.py`
+  - `src/models/google_wrapper.py`
+  - `src/models/openai_wrapper.py`
+  - `src/models/replicate_wrapper.py`
+  - `src/models/together_wrapper.py`
+
+**Configuration:**
+- `config.yaml`: Set `api.cache.enabled: false` and `experiment.cache_responses: false`
+
+**Documentation:**
+- Updated README.md to explain caching is disabled by default
+- Noted that caching can still be enabled for development/debugging with `enable_cache=True`
+- Clarified difference between API response caching and explicit experimental result saving
+
+### Infrastructure Preserved
+The caching infrastructure remains fully functional:
+- `Cache` class in `src/utils/cache.py` unchanged
+- Can be enabled per-model with `enable_cache=True`
+- Test suite (`test_caching.py`) explicitly enables caching and continues to pass
+- Useful for development, debugging, and non-research workflows
+
+### Impact
+- **Tests**: `test_caching.py` explicitly enables caching, so all tests still pass
+- **Development**: Can still use `enable_cache=True` when iterating on non-experimental code
+- **Experiments**: Now default to fresh API calls, preserving response variability
+- **Future**: Experimental results will be saved explicitly to `data/outputs/` (to be implemented)
+
+---
+
 ## [2025-11-04] Phase 3 Complete: Caching, Rate Limiting, and Retries
 
 ### Summary
